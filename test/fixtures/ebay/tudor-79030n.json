@@ -1,0 +1,101 @@
+{
+ "total": 8,
+ "itemSummaries": [
+  {
+   "itemId": "v1|1|0",
+   "title": "Tudor Black Bay 58 79030N Full Set 2022",
+   "price": {
+    "value": "2690",
+    "currency": "EUR"
+   },
+   "conditionId": "3000",
+   "itemCreationDate": "2026-10-10T10:00:00.000Z",
+   "itemEndDate": "2027-10-10T10:00:00.000Z",
+   "itemWebUrl": "https://www.ebay.fr/itm/v1|1|0"
+  },
+  {
+   "itemId": "v1|2|0",
+   "title": "TUDOR BLACK BAY FIFTY-EIGHT M79030N-0001 Box Papers",
+   "price": {
+    "value": "2790",
+    "currency": "EUR"
+   },
+   "conditionId": "3000",
+   "itemCreationDate": "2026-10-20T10:00:00.000Z",
+   "itemEndDate": "2027-10-20T10:00:00.000Z",
+   "itemWebUrl": "https://www.ebay.fr/itm/v1|2|0"
+  },
+  {
+   "itemId": "v1|3|0",
+   "title": "Tudor 79030N black gilt 39mm",
+   "price": {
+    "value": "2590",
+    "currency": "EUR"
+   },
+   "conditionId": "2750",
+   "itemCreationDate": "2026-10-25T10:00:00.000Z",
+   "itemEndDate": "2027-10-25T10:00:00.000Z",
+   "itemWebUrl": "https://www.ebay.fr/itm/v1|3|0"
+  },
+  {
+   "itemId": "v1|4|0",
+   "title": "Tudor Black Bay 58 79030N NEW unworn 2026",
+   "price": {
+    "value": "3190",
+    "currency": "EUR"
+   },
+   "conditionId": "1000",
+   "itemCreationDate": "2026-10-28T10:00:00.000Z",
+   "itemEndDate": "2027-10-28T10:00:00.000Z",
+   "itemWebUrl": "https://www.ebay.fr/itm/v1|4|0"
+  },
+  {
+   "itemId": "v1|5|0",
+   "title": "Tudor Black Bay 58 79030B blue",
+   "price": {
+    "value": "2750",
+    "currency": "EUR"
+   },
+   "conditionId": "3000",
+   "itemCreationDate": "2026-10-01T10:00:00.000Z",
+   "itemEndDate": "2027-10-01T10:00:00.000Z",
+   "itemWebUrl": "https://www.ebay.fr/itm/v1|5|0"
+  },
+  {
+   "itemId": "v1|6|0",
+   "title": "Replica Tudor 79030N homage",
+   "price": {
+    "value": "1100",
+    "currency": "EUR"
+   },
+   "conditionId": "1000",
+   "itemCreationDate": "2026-10-01T10:00:00.000Z",
+   "itemEndDate": "2027-10-01T10:00:00.000Z",
+   "itemWebUrl": "https://www.ebay.fr/itm/v1|6|0"
+  },
+  {
+   "itemId": "v1|7|0",
+   "title": "Tudor 79030N for parts",
+   "price": {
+    "value": "1500",
+    "currency": "EUR"
+   },
+   "conditionId": "7000",
+   "itemCreationDate": "2026-10-01T10:00:00.000Z",
+   "itemEndDate": "2027-10-01T10:00:00.000Z",
+   "itemWebUrl": "https://www.ebay.fr/itm/v1|7|0"
+  },
+  {
+   "itemId": "v1|8|0",
+   "title": "Tudor Black Bay 58 79030N 2021",
+   "price": {
+    "value": "3150",
+    "currency": "USD"
+   },
+   "conditionId": "3000",
+   "itemCreationDate": "2026-10-15T10:00:00.000Z",
+   "itemEndDate": "2027-10-15T10:00:00.000Z",
+   "itemWebUrl": "https://www.ebay.fr/itm/v1|8|0"
+  }
+ ]
+}

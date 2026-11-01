@@ -1,0 +1,919 @@
+[
+ {
+  "id": "tudor-79030n",
+  "brand": "Tudor",
+  "model": "Black Bay Fifty-Eight",
+  "ref": "M79030N-0001",
+  "aliases": [
+   "79030n",
+   "79030",
+   "bb58",
+   "black bay 58",
+   "black bay fifty-eight",
+   "fifty-eight"
+  ],
+  "status": "Arrêtée (remplacée en avril 2026)",
+  "years": "2018 – 2026",
+  "specs": {
+   "calibre": "MT5402 (manufacture, COSC)",
+   "reserve": "70 h",
+   "diam": "39 mm",
+   "epais": "11,9 mm",
+   "etanch": "200 m",
+   "mat": "Acier"
+  },
+  "retail": {
+   "eur": null,
+   "label": "3 920 $ au dernier tarif US"
+  },
+  "anchor": {
+   "market": 2512,
+   "low": 2330,
+   "high": 2800,
+   "date": "2026-11-01",
+   "basis": "2 935 $ (Watchscanning, mi-2026) ; 2 809 $ médiane WatchCharts (avril 2026)"
+  },
+  "study": {
+   "days": 11.5,
+   "salesYear": null,
+   "salesNote": "volume « fort » (5dwatches)",
+   "listings": null,
+   "vol": null,
+   "trend": 0,
+   "trendNote": "stabilisée à ~75 % du dernier prix neuf"
+  },
+  "offer": {
+   "score": 70,
+   "note": "Offre abondante depuis l'arrêt de la référence"
+  },
+  "hype": {
+   "score": 55,
+   "note": "Attention reportée sur la nouvelle BB58, mais base d'acheteurs très large"
+  },
+  "fake": "eleve",
+  "service": {
+   "interval": "Non vérifié (≈ 10 ans annoncé pour les calibres récents)",
+   "low": 500,
+   "high": 800
+  },
+  "warranty": "5 ans pour les montres vendues depuis 2020 ; 42 mois pour celles vendues de juillet 2018 à décembre 2019. Valable seulement avec la carte remplie par un revendeur officiel.",
+  "naked": 0.15,
+  "auth": [
+   "Numéro de série gravé = numéro de la carte de garantie",
+   "Fond de boîte plein et gravé (pas de fond transparent sur la BB58)",
+   "Couronne gravée de la rose Tudor, cadran « gilt » (index et inscriptions dorés) cohérent",
+   "Mouvement MT5402 : à faire vérifier par un horloger en cas de doute"
+  ],
+  "pitfalls": [
+   "Offre abondante : ne pas surpayer",
+   "Carte datée de 2018-2019 : garantie déjà expirée",
+   "Lunette rayée ou chanfreins polis : −5 à −10 %"
+  ],
+  "generations": [
+   "79030N / 79030B (2018-2026) : MT5402, 39 mm",
+   "M7939A1A0NU / RU (2026) : MT5400-U certifié METAS, 11,7 mm, bracelet 5 maillons en option"
+  ],
+  "sources": [
+   [
+    "Watchscanning, guide des prix Tudor (août 2026)",
+    "https://www.watchscanning.com/guides/tudor-price-guide/"
+   ],
+   [
+    "5dwatches, guide BB58 (avril 2026)",
+    "https://5dwatches.com/blog/tudor-black-bay-58-buying-guide-2026"
+   ],
+   [
+    "Tudor, garantie",
+    "https://www.tudorwatch.com/en/tudor-care/tudor-guarantee"
+   ]
+  ],
+  "queries": {
+   "ebay": "Tudor 79030N",
+   "reddit": "79030N"
+  },
+  "match": {
+   "any": [
+    "79030n",
+    "m79030n"
+   ],
+   "none": [
+    "79030b",
+    "7939"
+   ]
+  }
+ },
+ {
+  "id": "tudor-bb58-2026",
+  "brand": "Tudor",
+  "model": "Black Bay 58 (2026, METAS)",
+  "ref": "M7939A1A0NU-0001",
+  "aliases": [
+   "7939a1a0nu",
+   "7939a1a0ru",
+   "7939",
+   "bb58 2026",
+   "black bay 58 2026",
+   "black bay 58 metas"
+  ],
+  "status": "En production (lancée en avril 2026)",
+  "years": "2026 –",
+  "specs": {
+   "calibre": "MT5400-U (certifié METAS)",
+   "reserve": "Non vérifié",
+   "diam": "39 mm",
+   "epais": "11,7 mm",
+   "etanch": "200 m",
+   "mat": "Acier"
+  },
+  "retail": {
+   "eur": 4430,
+   "label": "4 430 € sur bracelet ; 4 090 € sur tissu (Ferret, France)"
+  },
+  "anchor": {
+   "market": 3681,
+   "low": 3550,
+   "high": 4000,
+   "date": "2026-11-01",
+   "basis": "≈ 4 300 $, 89 % du prix US (Watchscanning) ; neuves sur forums 4 175 à 4 700 $"
+  },
+  "study": {
+   "days": null,
+   "salesYear": null,
+   "salesNote": "trop récente pour être mesurée",
+   "listings": null,
+   "vol": null,
+   "trend": null,
+   "trendNote": "référence lancée en avril 2026"
+  },
+  "offer": {
+   "score": 40,
+   "note": "Offre surtout de montres neuves revendues"
+  },
+  "hype": {
+   "score": 75,
+   "note": "Nouveauté du centenaire Tudor, forte couverture presse"
+  },
+  "fake": "eleve",
+  "service": {
+   "interval": "Non vérifié",
+   "low": 500,
+   "high": 800
+  },
+  "warranty": "5 ans, valable avec la carte remplie par un revendeur officiel.",
+  "naked": 0.15,
+  "auth": [
+   "Numéro de série = carte de garantie",
+   "Cohérence de la référence M7939A1A0NU / RU avec le bracelet"
+  ],
+  "pitfalls": [
+   "Acheter neuf pour revendre = perte immédiate d'environ 11 %",
+   "Prime de nouveauté susceptible de s'éroder"
+  ],
+  "generations": [
+   "Remplace la 79030N (2018-2026)"
+  ],
+  "sources": [
+   [
+    "Ferret, prix France",
+    "https://www.ferret.fr/en/p/tudor-black-bay-58-watch-39mm-steel-case-steel-bracelet-0bf0"
+   ],
+   [
+    "Watchscanning",
+    "https://www.watchscanning.com/guides/tudor-price-guide/"
+   ]
+  ],
+  "queries": {
+   "ebay": "Tudor 7939A1A0",
+   "reddit": "7939A1A0"
+  },
+  "match": {
+   "any": [
+    "7939a1a0"
+   ],
+   "none": [
+    "7939g",
+    "gmt"
+   ]
+  }
+ },
+ {
+  "id": "tudor-79000n",
+  "brand": "Tudor",
+  "model": "Black Bay 54",
+  "ref": "M79000N-0001",
+  "aliases": [
+   "79000n",
+   "79000",
+   "bb54",
+   "black bay 54"
+  ],
+  "status": "En production (2023)",
+  "years": "2023 –",
+  "specs": {
+   "calibre": "MT5400 (manufacture, COSC)",
+   "reserve": "70 h",
+   "diam": "37 mm",
+   "epais": "11,2 mm",
+   "etanch": "200 m",
+   "mat": "Acier"
+  },
+  "retail": {
+   "eur": null,
+   "label": "4 575 $ (US)"
+  },
+  "anchor": {
+   "market": 2850,
+   "low": 2650,
+   "high": 3150,
+   "date": "2026-11-01",
+   "basis": "3 330 $ (Loupe, 116 annonces) ; annonces de forums 2 999 à 3 899 $"
+  },
+  "study": {
+   "days": 12,
+   "salesYear": 1568,
+   "listings": 116,
+   "vol": 14.5,
+   "trend": 6.7,
+   "trendNote": "+6,7 % (Loupe) ; rétention −9,2 % (WatchCharts)"
+  },
+  "offer": null,
+  "hype": {
+   "score": 65,
+   "note": "Format 37 mm recherché, très présent sur les forums"
+  },
+  "fake": "eleve",
+  "service": {
+   "interval": "Non vérifié",
+   "low": 500,
+   "high": 800
+  },
+  "warranty": "5 ans, valable avec la carte remplie par un revendeur officiel.",
+  "naked": 0.15,
+  "auth": [
+   "Numéro de série = carte de garantie",
+   "Lunette conforme au modèle (graduation des minutes)"
+  ],
+  "pitfalls": [
+   "Version cadran bleu 79000B plus récente (2026) : cote différente",
+   "Volatilité élevée (14,5 %)"
+  ],
+  "generations": [
+   "79000N (2023) ; 79000B « bleu Tudor » (2026)"
+  ],
+  "sources": [
+   [
+    "WatchCharts BB54",
+    "https://watchcharts.com/watch_model/54512-tudor-black-bay-54-79000/overview"
+   ],
+   [
+    "Loupe 79000N",
+    "https://www.loupe.watch/watch/tudor/79000n"
+   ]
+  ],
+  "queries": {
+   "ebay": "Tudor 79000N",
+   "reddit": "79000N"
+  },
+  "match": {
+   "any": [
+    "79000n",
+    "m79000n"
+   ],
+   "none": [
+    "79000b"
+   ]
+  }
+ },
+ {
+  "id": "tudor-25407n",
+  "brand": "Tudor",
+  "model": "Pelagos 39",
+  "ref": "M25407N-0001",
+  "aliases": [
+   "25407n",
+   "25407",
+   "pelagos 39",
+   "p39",
+   "pelagos"
+  ],
+  "status": "En production (2022)",
+  "years": "2022 –",
+  "specs": {
+   "calibre": "MT5400 (manufacture, COSC)",
+   "reserve": "70 h",
+   "diam": "39 mm",
+   "epais": "Non vérifié",
+   "etanch": "200 m",
+   "mat": "Titane"
+  },
+  "retail": {
+   "eur": null,
+   "label": "5 625 $ (US)"
+  },
+  "anchor": {
+   "market": 3391,
+   "low": 3020,
+   "high": 3700,
+   "date": "2026-11-01",
+   "basis": "3 962 $ (WatchCharts) ; 3 529 à 4 061 $ selon Loupe"
+  },
+  "study": {
+   "days": 16,
+   "salesYear": 180,
+   "salesNote": "≈ 180 par an, extrapolé de 15 ventes en 30 jours (Loupe)",
+   "listings": 148,
+   "vol": 9.5,
+   "trend": 7,
+   "trendNote": "+4,5 à +10,3 % selon la page Loupe"
+  },
+  "offer": null,
+  "hype": {
+   "score": 60,
+   "note": "Titane, 39 mm : très demandée chez les amateurs"
+  },
+  "fake": "moyen",
+  "service": {
+   "interval": "Non vérifié",
+   "low": 500,
+   "high": 800
+  },
+  "warranty": "5 ans, valable avec la carte remplie par un revendeur officiel.",
+  "naked": 0.15,
+  "auth": [
+   "Numéro de série = carte de garantie",
+   "Bracelet titane à fermoir T-fit et bracelet caoutchouc d'origine"
+  ],
+  "pitfalls": [
+   "Cotes divergentes selon les sources : faire ses propres relevés",
+   "Titane marqué facilement : vérifier l'état"
+  ],
+  "generations": [
+   "25407N (2022) ; Pelagos 42 / FXD : références distinctes"
+  ],
+  "sources": [
+   [
+    "WatchCharts Pelagos 39",
+    "https://marketplace.watchcharts.com/listing/33228531-tudor-pelagos-39-ref-m25407n"
+   ],
+   [
+    "Loupe 25407N",
+    "https://www.loupe.watch/watch/tudor/25407n"
+   ]
+  ],
+  "queries": {
+   "ebay": "Tudor Pelagos 25407N",
+   "reddit": "25407N OR \"Pelagos 39\""
+  },
+  "match": {
+   "any": [
+    "25407n",
+    "25407",
+    "pelagos 39"
+   ],
+   "none": [
+    "25600",
+    "25500",
+    "fxd",
+    "lhd"
+   ]
+  }
+ },
+ {
+  "id": "tudor-79830rb",
+  "brand": "Tudor",
+  "model": "Black Bay GMT",
+  "ref": "M79830RB-0001",
+  "aliases": [
+   "79830rb",
+   "79830",
+   "bb gmt",
+   "black bay gmt",
+   "pepsi"
+  ],
+  "status": "En production (2018)",
+  "years": "2018 –",
+  "specs": {
+   "calibre": "MT5652 (GMT, COSC)",
+   "reserve": "70 h",
+   "diam": "41 mm",
+   "epais": "Non vérifié",
+   "etanch": "200 m",
+   "mat": "Acier"
+  },
+  "retail": {
+   "eur": null,
+   "label": "5 275 $ (US, sept. 2026)"
+  },
+  "anchor": {
+   "market": 2677,
+   "low": 2450,
+   "high": 3000,
+   "date": "2026-11-01",
+   "basis": "3 128 $ (WatchCharts, 11 oct. 2026)"
+  },
+  "study": {
+   "days": 24,
+   "salesYear": null,
+   "listings": 51,
+   "vol": 10.8,
+   "trend": 5.7,
+   "trendNote": "+5,7 % (Loupe)"
+  },
+  "offer": {
+   "score": 55,
+   "note": "51 annonces suivies (Loupe), concurrence de la BB58 GMT"
+  },
+  "hype": {
+   "score": 45,
+   "note": "Concurrencée par la Black Bay 58 GMT (39 mm)"
+  },
+  "fake": "eleve",
+  "service": {
+   "interval": "Non vérifié",
+   "low": 550,
+   "high": 850
+  },
+  "warranty": "5 ans, valable avec la carte remplie par un revendeur officiel.",
+  "naked": 0.15,
+  "auth": [
+   "Numéro de série = carte de garantie",
+   "Aiguille GMT et lunette bicolore conformes à la version (cadran noir ou opaline)"
+  ],
+  "pitfalls": [
+   "Rétention faible (~59 % du prix neuf)",
+   "Versions cadran opaline : cote un peu plus haute"
+  ],
+  "generations": [
+   "79830RB (2018) ; BB58 GMT M7939G1A0NRU (2024)"
+  ],
+  "sources": [
+   [
+    "WatchCharts BB GMT",
+    "https://watchcharts.com/watch/1361/overview"
+   ],
+   [
+    "Loupe 79830RB",
+    "https://www.loupe.watch/watch/tudor/79830rb"
+   ]
+  ],
+  "queries": {
+   "ebay": "Tudor 79830RB",
+   "reddit": "79830RB"
+  },
+  "match": {
+   "any": [
+    "79830rb",
+    "79830"
+   ],
+   "none": [
+    "7939g"
+   ]
+  }
+ },
+ {
+  "id": "iwc-iw328201",
+  "brand": "IWC",
+  "model": "Pilot's Watch Mark XX",
+  "ref": "IW328201",
+  "aliases": [
+   "iw328201",
+   "328201",
+   "mark xx",
+   "mark 20",
+   "pilot mark xx",
+   "iw3282"
+  ],
+  "status": "En production (2022)",
+  "years": "2022 –",
+  "specs": {
+   "calibre": "32111 (IWC, famille 32000)",
+   "reserve": "120 h",
+   "diam": "40 mm",
+   "epais": "10,8 mm",
+   "etanch": "100 m",
+   "mat": "Acier"
+  },
+  "retail": {
+   "eur": 5700,
+   "label": "5 690 à 5 700 € (Maier, France)"
+  },
+  "anchor": {
+   "market": 3595,
+   "low": 3200,
+   "high": 3900,
+   "date": "2026-11-01",
+   "basis": "4 100 à 4 300 $ (5dwatches, juin 2026) ; médiane de 215 annonces de forums 4 599 $"
+  },
+  "study": {
+   "days": 26.5,
+   "salesYear": 216,
+   "listings": null,
+   "vol": 9.6,
+   "trend": -3,
+   "trendNote": "indice IWC −5 % sur 12 mois ; la Mark XX résiste mieux"
+  },
+  "offer": {
+   "score": 60,
+   "note": "Nombreuses annonces sur les forums (215 cumulées)"
+  },
+  "hype": {
+   "score": 30,
+   "note": "Marque peu « hype » : décote déjà forte"
+  },
+  "fake": "moyen",
+  "service": {
+   "interval": "Non vérifié",
+   "low": 600,
+   "high": 900
+  },
+  "warranty": "2 ans, plus 6 ans via My IWC (8 ans au total). L'extension profite aux propriétaires suivants.",
+  "naked": 0.12,
+  "auth": [
+   "Numéro de série = carte de garantie et compte My IWC",
+   "Système EasX-CHANGE (bracelet interchangeable) fonctionnel"
+  ],
+  "pitfalls": [
+   "Ne jamais acheter neuf pour revendre : environ −2 000 € en France",
+   "Délai de vente long (26,5 jours)"
+  ],
+  "generations": [
+   "Mark XVIII (Sellita, 41 mm) → Mark XX (2022, 32111, 40 mm)"
+  ],
+  "sources": [
+   [
+    "WatchCharts Mark XX",
+    "https://watchcharts.com/watch_model/41837-iwc-pilot-s-watch-mark-xx-stainless-steel-328201/overview"
+   ],
+   [
+    "5dwatches IWC (juin 2026)",
+    "https://5dwatches.com/blog/iwc-pilot-undervalued-manufacture-2026"
+   ],
+   [
+    "IWC My IWC",
+    "https://www.iwc.com/fr/terms-and-legal/my-iwc.html"
+   ]
+  ],
+  "queries": {
+   "ebay": "IWC IW328201",
+   "reddit": "IW328201 OR 328201"
+  },
+  "match": {
+   "any": [
+    "iw328201",
+    "328201"
+   ],
+   "none": []
+  }
+ },
+ {
+  "id": "iwc-pilot-chrono-41",
+  "brand": "IWC",
+  "model": "Pilot's Watch Chronograph 41",
+  "ref": "IW388101 / IW388102",
+  "aliases": [
+   "iw388101",
+   "388101",
+   "iw388102",
+   "388102",
+   "iw3881",
+   "pilot chronograph 41",
+   "pilot chrono 41",
+   "chronograph 41"
+  ],
+  "status": "En production (2021)",
+  "years": "2021 –",
+  "specs": {
+   "calibre": "69385 (chronographe à roue à colonnes)",
+   "reserve": "46 h",
+   "diam": "41 mm",
+   "epais": "Non vérifié",
+   "etanch": "100 m",
+   "mat": "Acier"
+  },
+  "retail": {
+   "eur": 8800,
+   "label": "≈ 8 800 € (revendeur zone euro, à vérifier)"
+  },
+  "anchor": {
+   "market": 4750,
+   "low": 4320,
+   "high": 5400,
+   "date": "2026-11-01",
+   "basis": "Estimation : médiane de 80 annonces de forums 5 850 $ moins ~5 %"
+  },
+  "study": {
+   "days": null,
+   "salesYear": null,
+   "listings": 80,
+   "vol": null,
+   "trend": -5,
+   "trendNote": "indice IWC −5 % sur 12 mois"
+  },
+  "offer": {
+   "score": 60,
+   "note": "80 annonces de forums suivies"
+  },
+  "hype": {
+   "score": 30,
+   "note": "Faible attention, nombreuses éditions spéciales"
+  },
+  "fake": "moyen",
+  "service": {
+   "interval": "Non vérifié",
+   "low": 700,
+   "high": 1100
+  },
+  "warranty": "2 ans, plus 6 ans via My IWC (8 ans au total).",
+  "naked": 0.12,
+  "auth": [
+   "Numéro de série = carte de garantie",
+   "Poussoirs et remise à zéro du chronographe à tester"
+  ],
+  "pitfalls": [
+   "Révision de chronographe coûteuse",
+   "Éditions Top Gun / AMG : cotes différentes"
+  ],
+  "generations": [
+   "IW3777 (Valjoux) → IW3881 (69385, 2021)"
+  ],
+  "sources": [
+   [
+    "WatchPatrol IWC",
+    "https://www.watchpatrol.net/fr/decouvrir/marques/iwc/pilots-watch-automatic/"
+   ]
+  ],
+  "queries": {
+   "ebay": "IWC (IW388101, IW388102)",
+   "reddit": "IW388101 OR IW388102 OR 388101 OR 388102"
+  },
+  "match": {
+   "any": [
+    "388101",
+    "388102"
+   ],
+   "none": []
+  }
+ },
+ {
+  "id": "seiko-spb143",
+  "brand": "Seiko",
+  "model": "Prospex 62MAS (réédition)",
+  "ref": "SPB143J1",
+  "aliases": [
+   "spb143",
+   "spb143j1",
+   "62mas",
+   "sbdc101",
+   "prospex 62mas"
+  ],
+  "status": "En production (2020)",
+  "years": "2020 –",
+  "specs": {
+   "calibre": "6R35",
+   "reserve": "70 h",
+   "diam": "40,5 mm",
+   "epais": "Non vérifié",
+   "etanch": "200 m",
+   "mat": "Acier"
+  },
+  "retail": {
+   "eur": null,
+   "label": "1 200 $ (US, avril 2026)"
+  },
+  "anchor": {
+   "market": 677,
+   "low": 600,
+   "high": 770,
+   "date": "2026-11-01",
+   "basis": "791 $ (WatchCharts, 10 oct. 2026)"
+  },
+  "study": {
+   "days": 12,
+   "salesYear": 737,
+   "listings": null,
+   "vol": 12.2,
+   "trend": 5.8,
+   "trendNote": "+5,8 % (Loupe, SPB143J1)"
+  },
+  "offer": {
+   "score": 55,
+   "note": "Très répandue, concurrencée par la génération 6R55 (SPB451/453)"
+  },
+  "hype": {
+   "score": 55,
+   "note": "Icône de la communauté Seiko"
+  },
+  "fake": "moyen",
+  "service": {
+   "interval": "Non vérifié",
+   "low": 250,
+   "high": 400
+  },
+  "warranty": "Non vérifié en France.",
+  "naked": 0.1,
+  "auth": [
+   "Vérifier l'absence de modding (pièces non Seiko)",
+   "Alignement lunette et réhaut"
+  ],
+  "pitfalls": [
+   "Sous le seuil de 750 € : marge absolue trop faible pour un revendeur"
+  ],
+  "generations": [
+   "SPB143/145/147/149 (2020, 6R35) → SPB451/453/455 (2024, 6R55, 300 m)"
+  ],
+  "sources": [
+   [
+    "WatchCharts SPB143",
+    "https://watchcharts.com/watch_model/23244-seiko-prospex-diver-62mas-spb143/overview"
+   ]
+  ],
+  "queries": {
+   "ebay": "Seiko SPB143",
+   "reddit": "SPB143 OR SBDC101"
+  },
+  "match": {
+   "any": [
+    "spb143",
+    "sbdc101"
+   ],
+   "none": []
+  }
+ },
+ {
+  "id": "seiko-sla021",
+  "brand": "Seiko",
+  "model": "Prospex Marinemaster 300",
+  "ref": "SLA021J1",
+  "aliases": [
+   "sla021",
+   "sla021j1",
+   "sbdx023",
+   "mm300",
+   "marinemaster 300",
+   "marinemaster"
+  ],
+  "status": "Statut non vérifié",
+  "years": "2018 –",
+  "specs": {
+   "calibre": "8L35",
+   "reserve": "50 h",
+   "diam": "44 mm",
+   "epais": "Non vérifié",
+   "etanch": "300 m",
+   "mat": "Acier"
+  },
+  "retail": {
+   "eur": 3200,
+   "label": "3 200 € au lancement (Fratello)"
+  },
+  "anchor": {
+   "market": 1580,
+   "low": 1320,
+   "high": 1950,
+   "date": "2026-11-01",
+   "basis": "Estimation : annonces de forums européens 1 544 à 2 286 $"
+  },
+  "study": {
+   "days": null,
+   "salesYear": null,
+   "salesNote": "très faible",
+   "listings": 16,
+   "vol": null,
+   "trend": null,
+   "trendNote": "famille Marinemaster +13,3 % (petit échantillon)"
+  },
+  "offer": {
+   "score": 30,
+   "note": "16 annonces pour toute la famille (Loupe)"
+  },
+  "hype": {
+   "score": 40,
+   "note": "Culte chez les amateurs de plongeuses"
+  },
+  "fake": "moyen",
+  "service": {
+   "interval": "Non vérifié",
+   "low": 300,
+   "high": 500
+  },
+  "warranty": "Non vérifié.",
+  "naked": 0.1,
+  "auth": [
+   "Calibre 8L35 visible seulement à l'ouverture : exiger une preuve d'entretien",
+   "Vérifier l'alignement de la lunette"
+  ],
+  "pitfalls": [
+   "Acheteurs rares : délai de vente imprévisible"
+  ],
+  "generations": [
+   "SBDX001 → SBDX017 → SLA021 / SBDX023"
+  ],
+  "sources": [
+   [
+    "Fratello SLA021",
+    "https://www.fratellowatches.com/seiko-watches/seiko-marinemaster-300-sla021j1-still-the-best-in-class/"
+   ],
+   [
+    "WatchPatrol annonces",
+    "https://www.watchpatrol.net/de/eintrag/3137170/"
+   ]
+  ],
+  "queries": {
+   "ebay": "Seiko (SLA021, SBDX023)",
+   "reddit": "SLA021 OR SBDX023"
+  },
+  "match": {
+   "any": [
+    "sla021",
+    "sbdx023"
+   ],
+   "none": []
+  }
+ },
+ {
+  "id": "seiko-sje083",
+  "brand": "Seiko",
+  "model": "King Seiko KSK (140e anniversaire)",
+  "ref": "SJE083J1",
+  "aliases": [
+   "sje083",
+   "sje083j1",
+   "sdka001",
+   "king seiko",
+   "king seiko ksk"
+  ],
+  "status": "Arrêtée (édition limitée de 3 000 exemplaires)",
+  "years": "2021",
+  "specs": {
+   "calibre": "6L35",
+   "reserve": "45 h",
+   "diam": "38,1 mm",
+   "epais": "Non vérifié",
+   "etanch": "Non vérifié",
+   "mat": "Acier"
+  },
+  "retail": {
+   "eur": null,
+   "label": "3 300 $ (US)"
+  },
+  "anchor": {
+   "market": 1503,
+   "low": 1280,
+   "high": 1880,
+   "date": "2026-11-01",
+   "basis": "1 756 $ (Loupe)"
+  },
+  "study": {
+   "days": 38,
+   "salesYear": null,
+   "salesNote": "très faible",
+   "listings": 3,
+   "vol": 16.5,
+   "trend": -2.8,
+   "trendNote": "−2,8 % (Loupe)"
+  },
+  "offer": {
+   "score": 20,
+   "note": "3 annonces suivies (Loupe)"
+  },
+  "hype": {
+   "score": 35,
+   "note": "Appréciée des connaisseurs, faible audience"
+  },
+  "fake": "faible",
+  "service": {
+   "interval": "Non vérifié",
+   "low": 300,
+   "high": 500
+  },
+  "warranty": "Non vérifié.",
+  "naked": 0.1,
+  "auth": [
+   "Numéro d'édition limitée cohérent avec les papiers"
+  ],
+  "pitfalls": [
+   "Délai de vente long (38 jours)",
+   "Volatilité élevée (16,5 %)"
+  ],
+  "generations": [
+   "KSK 1965 (original) → SJE083 (2021, édition limitée) → SPB279 (série)"
+  ],
+  "sources": [
+   [
+    "Loupe SJE083",
+    "https://www.loupe.watch/watch/seiko/sje083"
+   ]
+  ],
+  "queries": {
+   "ebay": "Seiko SJE083",
+   "reddit": "SJE083 OR SDKA001"
+  },
+  "match": {
+   "any": [
+    "sje083",
+    "sdka001"
+   ],
+   "none": []
+  }
+ }
+]

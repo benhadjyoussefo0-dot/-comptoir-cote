@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comptoir de cote horlogère</title>
+<meta name="description" content="Cote de revente, demande, offre, hype et indice de risque de montres d'occasion (Tudor, IWC, Seiko), mis à jour automatiquement.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Plan : un « certificat de cote » en acier brossé. La lunette de plongée de l'indice de risque est le seul élément audacieux.
+   Mise en page : recherche, bandeau « marché en direct », puis cote | risque, indicateurs, verdict, fiche. */
+:root{
+  --steel:#E9ECEE; --plate:#FFFFFF; --ink:#14181D; --mute:#5B6570; --rule:#D3D8DD;
+  --accent:#23477A; --accent-soft:#E3EAF4;
+  --good:#2F7A4E; --warn:#A86A12; --crit:#B3261E;
+  --good-soft:#E4F2EA; --warn-soft:#F7EEDC; --crit-soft:#F8E3E1;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --steel:#111417; --plate:#1A1F24; --ink:#E8ECEF; --mute:#9AA5AF; --rule:#2C333A;
+    --accent:#8FB0E3; --accent-soft:#1E2A3B;
+    --good:#6CC08F; --warn:#E0A84A; --crit:#F08377;
+    --good-soft:#18291F; --warn-soft:#2E2414; --crit-soft:#33191A;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --steel:#111417; --plate:#1A1F24; --ink:#E8ECEF; --mute:#9AA5AF; --rule:#2C333A;
+  --accent:#8FB0E3; --accent-soft:#1E2A3B;
+  --good:#6CC08F; --warn:#E0A84A; --crit:#F08377;
+  --good-soft:#18291F; --warn-soft:#2E2414; --crit-soft:#33191A;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--steel);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;font-variant-numeric:tabular-nums}
+a{color:var(--accent)}
+.wrap{max-width:1120px;margin:0 auto;padding:20px 16px 48px;display:grid;gap:16px}
+header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:8px 24px;border-bottom:2px solid var(--ink);padding-bottom:10px}
+header.top h1{font-family:var(--display);font-weight:700;font-size:34px;letter-spacing:.02em;text-transform:uppercase;margin:0;line-height:1}
+header.top p{margin:0;color:var(--mute);font-size:13px}
+.plate{background:var(--plate);border:1px solid var(--rule);border-radius:6px;padding:16px}
+.label{font-family:var(--display);font-weight:600;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);margin:0 0 8px}
+h2{font-family:var(--display);font-weight:700;font-size:22px;letter-spacing:.02em;margin:0 0 4px;text-wrap:balance}
+form.search{display:grid;grid-template-columns:1fr 1.3fr 1fr auto;gap:10px;align-items:end}
+.field{display:grid;gap:4px}
+.field label{font-size:12px;font-weight:600;color:var(--mute)}
+input,textarea,select{font:inherit;color:var(--ink);background:var(--plate);border:1px solid var(--rule);border-radius:4px;padding:8px 10px;width:100%}
+textarea{min-height:70px;resize:vertical}
+input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-visible,.chip:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button{font:inherit;font-weight:600;cursor:pointer;border-radius:4px;padding:9px 16px;border:1px solid var(--accent);background:var(--accent);color:var(--plate)}
+button.ghost{background:transparent;color:var(--accent)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.chip{border:1px solid var(--rule);background:var(--steel);color:var(--ink);border-radius:999px;padding:4px 10px;font-size:12.5px;font-weight:500;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--plate)}
+.id-strip{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px}
+.id-strip .ref{font-family:var(--display);font-size:30px;font-weight:700;line-height:1}
+.pill{display:inline-block;border-radius:999px;padding:2px 9px;font-size:12px;font-weight:600;border:1px solid transparent}
+.pill.ok{background:var(--good-soft);color:var(--good);border-color:var(--good)}
+.pill.warn{background:var(--warn-soft);color:var(--warn);border-color:var(--warn)}
+.pill.crit{background:var(--crit-soft);color:var(--crit);border-color:var(--crit)}
+.pill.manual{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
+.pill.neutral{background:var(--steel);color:var(--mute);border-color:var(--rule)}
+.src{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-radius:3px;padding:1px 5px;vertical-align:2px}
+.src.live{background:var(--good-soft);color:var(--good)}
+.src.study{background:var(--steel);color:var(--mute);border:1px solid var(--rule)}
+.grid2{display:grid;grid-template-columns:1.25fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.live-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;align-items:center}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.stats div{border-top:1px solid var(--rule);padding-top:6px}
+.stats b{display:block;font-family:var(--display);font-size:22px}
+table{border-collapse:collapse;width:100%}
+th,td{text-align:left;padding:7px 6px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-size:12px;color:var(--mute);font-weight:600}
+td.num,th.num{text-align:right}
+tr.ref-row td{font-weight:700}
+.muted{color:var(--mute)}
+.small{font-size:12.5px}
+.meter{display:grid;gap:4px}
+.meter .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.meter .name{font-weight:600}
+.meter .val{font-family:var(--display);font-size:22px;font-weight:700}
+.bar{height:8px;background:var(--steel);border-radius:4px;overflow:hidden;border:1px solid var(--rule)}
+.bar > span{display:block;height:100%;background:var(--accent)}
+.gauge-wrap{display:grid;grid-template-columns:200px 1fr;gap:14px;align-items:center}
+.gauge text{font-family:var(--display)}
+.breakdown{display:grid;gap:6px}
+.bd{display:grid;grid-template-columns:1fr 46px;gap:2px 8px;align-items:center;font-size:13px}
+.bd .bar{grid-column:1 / -1;height:6px}
+.verdict{border-left:6px solid var(--accent);padding:12px 14px;background:var(--accent-soft);border-radius:4px}
+.verdict.crit{border-color:var(--crit);background:var(--crit-soft)}
+.verdict.warn{border-color:var(--warn);background:var(--warn-soft)}
+.verdict.good{border-color:var(--good);background:var(--good-soft)}
+.verdict h3{margin:0 0 4px;font-family:var(--display);font-size:24px;letter-spacing:.02em}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.kv div{border-top:1px solid var(--rule);padding-top:6px}
+.kv b{display:block;font-family:var(--display);font-size:22px}
+ul.tight{margin:4px 0 0;padding-left:18px}
+ul.tight li{margin:2px 0}
+.calc{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;align-items:end}
+.notice{border:1px dashed var(--rule);border-radius:6px;padding:12px;background:var(--steel)}
+.err{color:var(--crit);font-weight:600}
+.spec{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.spec div{background:var(--steel);border-radius:4px;padding:8px}
+.spec span{display:block;font-size:11.5px;color:var(--mute);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.spec b{font-size:15px}
+.spark text{font-family:var(--body);font-size:11px}
+footer{color:var(--mute);font-size:12.5px;display:grid;gap:6px}
+.hidden{display:none !important}
+@media (max-width:860px){
+  form.search{grid-template-columns:1fr 1fr}
+  .grid2,.grid3,.live-grid{grid-template-columns:1fr}
+  .calc{grid-template-columns:1fr 1fr}
+  .gauge-wrap{grid-template-columns:1fr;justify-items:center}
+}
+@media (max-width:420px){ form.search,.calc{grid-template-columns:1fr} }
+@media (prefers-reduced-motion:no-preference){ .bar > span{transition:width .5s ease} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>Comptoir de cote horlogère</h1>
+      <p id="subtitle">Prix par état, demande, offre, hype et indice de risque pour l'achat-revente.</p>
+    </div>
+    <p id="fx-line">Chargement des données…</p>
+  </header>
+
+  <section class="plate" aria-labelledby="search-title">
+    <p class="label" id="search-title">Rechercher une montre</p>
+    <form class="search" id="search-form" autocomplete="off">
+      <div class="field"><label for="in-brand">Marque</label><input id="in-brand" placeholder="Tudor"></div>
+      <div class="field"><label for="in-model">Modèle</label><input id="in-model" placeholder="Black Bay 58"></div>
+      <div class="field"><label for="in-ref">Référence</label><input id="in-ref" placeholder="79030N"></div>
+      <button type="submit" id="btn-search">Analyser</button>
+    </form>
+    <div class="chips" id="chips" aria-label="Références suivies"></div>
+  </section>
+
+  <section id="notfound" class="plate hidden" aria-live="polite"></section>
+  <main id="result" aria-live="polite"></main>
+
+  <footer>
+    <div><b>D'où viennent les chiffres.</b> Au départ, la cote de chaque montre est celle de l'étude du 1<sup>er</sup> novembre 2026. Toutes les 6 heures, un robot GitHub relève les annonces eBay (France, Allemagne, États-Unis) et r/Watchexchange, ainsi que le taux BCE. La cote est rapprochée de la médiane des prix demandés, moins 8 % : un prix demandé surestime le prix de vente. Plus il y a d'annonces, plus la cote bouge. Une annonce eBay qui disparaît avant sa date de fin est comptée comme « écoulée » ; son ancienneté donne le délai de vente estimé. Chrono24 n'est pas interrogé : il n'a pas d'interface publique et interdit la collecte automatique.</div>
+    <div><b>Indice de risque (0 = sûr, 100 = très risqué).</b> 25 % liquidité (délai de vente, de 7 à 60 jours), 25 % tendance (de +5 % à −15 % sur 12 mois), 15 % volatilité (de 5 à 25 %), 20 % contrefaçon (faible 20, moyen 50, élevé 80), 15 % coût de révision rapporté à la cote (0 à 25 %). Les étiquettes <span class="src live">direct</span> et <span class="src study">étude</span> indiquent la provenance de chaque indicateur.</div>
+    <div>Outil d'aide à la décision, pas un conseil en investissement. Aucune marge n'est garantie. <a id="repo-link" href="#">Code source et méthode sur GitHub</a>.</div>
+  </footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+var REPO = "benhadjyoussefo0-dot/comptoir-cote";
+var FEE = 0.065;
+var REFRESH_MS = 10 * 60 * 1000;
+var REFS = [], MARKET = {refs:{}, sources:{}}, HISTORY = {};
+
+/* ---------- Utilitaires ---------- */
+function $(s){ return document.querySelector(s); }
+function esc(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+function clamp(v){ return Math.max(0, Math.min(100, v)); }
+function eur(v){ return v == null || isNaN(v) ? "—" : Math.round(v).toLocaleString("fr-FR") + " €"; }
+function pct(v, d){ return v == null || isNaN(v) ? "—" : (v > 0 ? "+" : "") + Number(v).toFixed(d == null ? 1 : d).replace(".", ",") + " %"; }
+function fr(v){ return String(v).replace(".", ","); }
+function norm(s){ return String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim(); }
+function quantile(sorted, q){ if (!sorted.length) return null; var pos = (sorted.length - 1) * q, lo = Math.floor(pos), hi = Math.ceil(pos); return sorted[lo] + (sorted[hi] - sorted[lo]) * (pos - lo); }
+function parseNums(text){
+  var out = [];
+  String(text || "").split(/[\n,;|\/€]+/).forEach(function(chunk){
+    chunk = chunk.trim(); if (!chunk) return;
+    if (/^\d{1,2}[  .]\d{3}$/.test(chunk)) { out.push(parseFloat(chunk.replace(/[  .]/g, ""))); return; }
+    chunk.split(/\s+/).forEach(function(p){ if (/^\d{1,3}\.\d{3}$/.test(p)) p = p.replace(".", ""); p = p.replace(/[^\d.]/g, ""); if (p) out.push(parseFloat(p)); });
+  });
+  return out.filter(function(n){ return n >= 100 && n < 500000; }).sort(function(a, b){ return a - b; });
+}
+function ago(iso){
+  if (!iso) return "jamais";
+  var h = (Date.now() - new Date(iso).getTime()) / 3600000;
+  if (h < 1) return "il y a moins d'une heure";
+  if (h < 48) return "il y a " + Math.round(h) + " h";
+  return "il y a " + Math.round(h / 24) + " jours";
+}
+function tag(isLive){ return isLive ? ' <span class="src live">direct</span>' : ' <span class="src study">étude</span>'; }
+
+/* ---------- Données ---------- */
+function loadJson(url){ return fetch(url + "?t=" + Date.now(), {cache:"no-store"}).then(function(r){ if (!r.ok) throw new Error(url + " : " + r.status); return r.json(); }); }
+function loadAll(){
+  return Promise.all([loadJson("data/references.json"), loadJson("data/market.json").catch(function(){ return {refs:{}, sources:{}}; }), loadJson("data/history.json").catch(function(){ return {}; })])
+    .then(function(r){ REFS = r[0]; MARKET = r[1] || {refs:{}}; HISTORY = r[2] || {}; });
+}
+
+// Fusionne la fiche de l'étude et les indicateurs en direct.
+function effective(ref){
+  var live = (MARKET.refs || {})[ref.id] || null;
+  var a = ref.anchor || {}, st = ref.study || {};
+  var has = function(v){ return live && v != null; };
+  var w = JSON.parse(JSON.stringify(ref));
+  w.live = live;
+  w.mk = has(live && live.market) ? live.market : a.market;
+  w.mkLive = !!(live && !live.stale && live.market != null);
+  w.low = has(live && live.low) ? live.low : a.low;
+  w.high = has(live && live.high) ? live.high : a.high;
+  w.days = has(live && live.days) ? {v:live.days, live:true, note:live.daysN + " annonces eBay écoulées"} : {v:st.days, live:false};
+  w.trend = has(live && live.trend12) ? {v:live.trend12, live:true, note:"historique sur 12 mois"} : {v:st.trend, live:false, note:st.trendNote};
+  w.trend30 = live ? live.trend30 : null;
+  w.vol = has(live && live.vol) ? {v:live.vol, live:true} : {v:st.vol, live:false};
+  w.salesYear = st.salesYear; w.salesNote = st.salesNote; w.listings = st.listings;
+  return w;
+}
+
+/* ---------- Recherche ---------- */
+function find(brand, model, ref){
+  var b = norm(brand), mo = norm(model), r = norm(ref).replace(/ /g, "");
+  var best = null, bestScore = 0;
+  REFS.forEach(function(w){
+    var s = 0, refN = norm(w.ref).replace(/ /g, "");
+    if (r && r.length >= 4){
+      if (refN.indexOf(r) >= 0 || r.indexOf(refN.replace(/^m/, "").slice(0, 6)) >= 0) s += 10;
+      (w.aliases || []).forEach(function(al){ var an = norm(al).replace(/ /g, ""); if (an === r || (r.length >= 5 && an.indexOf(r) >= 0)) s += 8; });
+    }
+    if (mo){
+      (w.aliases || []).forEach(function(al){ al = norm(al); if (!al) return; if (mo === al) s += 6; else if (mo.indexOf(al) >= 0 || (al.length > 5 && al.indexOf(mo) >= 0)) s += 3; });
+      if (norm(w.model).indexOf(mo) >= 0) s += 3;
+    }
+    if (b && norm(w.brand) === b) s += 1;
+    if (b && norm(w.brand) !== b && b.length > 2) s -= 5;
+    if (s > bestScore){ bestScore = s; best = w; }
+  });
+  return bestScore >= 4 ? best : null;
+}
+
+/* ---------- Calculs ---------- */
+function compute(w){
+  var mk = w.mk, c = {}, live = w.live || {};
+  var newPrice = live.nNew >= 3 && live.askNewMedian ? live.askNewMedian * 0.95 : mk * 1.10;
+  c.states = [
+    ["Neuve, jamais portée", newPrice, false, live.nNew >= 3],
+    ["Excellent état, boîte et papiers", mk, true, w.mkLive],
+    ["Très bon état, complète", mk * 0.93],
+    ["Boîte ou papiers manquants", mk * 0.87],
+    ["Montre seule", mk * (1 - (w.naked || 0.12))]
+  ];
+  var days = w.days.v;
+  var dDays = days != null ? clamp(100 - (days - 7) * 100 / 53) : null;
+  var dVol = w.salesYear ? clamp(Math.log10(w.salesYear) / Math.log10(2000) * 100) : null;
+  var wtbBoost = live.redditWtb30 != null && live.redditWts30 ? clamp(live.redditWtb30 / live.redditWts30 * 100) : null;
+  var parts = [], wsum = 0, acc = 0;
+  [[dDays, 0.5], [dVol, 0.3], [wtbBoost, 0.2]].forEach(function(p){ if (p[0] != null){ acc += p[0] * p[1]; wsum += p[1]; } });
+  c.demand = wsum ? Math.round(acc / wsum) : null;
+  var db = [];
+  if (days != null) db.push(fr(days) + " j de délai" + (w.days.live ? " (direct)" : ""));
+  if (w.salesYear) db.push(w.salesYear.toLocaleString("fr-FR") + " ventes/an (étude)"); else if (w.salesNote) db.push(w.salesNote);
+  if (live.redditWtb30 != null) db.push(live.redditWtb30 + " demandes [WTB] pour " + live.redditWts30 + " offres sur Reddit (30 j)");
+  c.demandBasis = db.join(" · ") || "Données insuffisantes";
+  c.demandLive = !!(w.days.live || live.redditWtb30 != null);
+  if (live.offerScore != null){ c.offer = live.offerScore; c.offerBasis = live.offerBasis; c.offerLive = true; }
+  else if (w.listings && w.salesYear){ var months = w.listings / (w.salesYear / 12); c.offer = Math.round(clamp(months / 6 * 100)); c.offerBasis = w.listings + " annonces ≈ " + fr(months.toFixed(1)) + " mois de stock (étude)"; }
+  else if (w.offer){ c.offer = w.offer.score; c.offerBasis = w.offer.note; }
+  else { c.offer = null; c.offerBasis = "Données insuffisantes"; }
+  if (live.hypeScore != null){ c.hype = live.hypeScore; c.hypeBasis = live.hypeBasis; c.hypeLive = true; }
+  else if (w.hype){ c.hype = w.hype.score; c.hypeBasis = w.hype.note; }
+  else { c.hype = null; c.hypeBasis = "Données insuffisantes"; }
+  // Risque
+  var neutral = [];
+  function part(name, w8, val, txt, isLive){ parts.push({name:name, w:w8, v:Math.round(val), txt:txt, live:isLive}); }
+  parts = [];
+  part("Liquidité", 0.25, days != null ? clamp((days - 7) / 53 * 100) : (neutral.push("liquidité"), 60), days != null ? fr(days) + " j" : "inconnue", w.days.live);
+  var tr = w.trend.v;
+  part("Tendance 12 mois", 0.25, tr != null ? clamp((5 - tr) / 20 * 100) : (neutral.push("tendance"), 50), tr != null ? pct(tr) : "inconnue", w.trend.live);
+  var vo = w.vol.v;
+  part("Volatilité", 0.15, vo != null ? clamp((vo - 5) / 20 * 100) : (neutral.push("volatilité"), 50), vo != null ? fr(vo) + " %" : "inconnue", w.vol.live);
+  part("Contrefaçon", 0.20, {faible:20, moyen:50, eleve:80}[w.fake] || 50, {faible:"faible", moyen:"moyen", eleve:"élevé"}[w.fake] || "inconnu", false);
+  var sv = w.service && w.service.low != null ? (w.service.low + w.service.high) / 2 : null;
+  part("Coût de révision", 0.15, sv != null && mk ? clamp(sv / mk / 0.25 * 100) : (neutral.push("coût de révision"), 50), sv != null && mk ? Math.round(sv / mk * 100) + " % de la cote" : "inconnu", false);
+  c.riskParts = parts; c.riskNeutral = neutral;
+  c.risk = Math.round(parts.reduce(function(s, p){ return s + p.w * p.v; }, 0));
+  c.riskLabel = c.risk <= 33 ? "Faible" : (c.risk <= 55 ? "Modéré" : "Élevé");
+  // Stratégie
+  c.target = Math.floor(mk * 0.85 / 10) * 10;
+  c.maxBuy = Math.floor((mk * (1 - FEE) - 45 - 25 * 1.03) / 1.03 / 10) * 10;
+  c.breakeven = (c.target + 25 + 45) / (1 - FEE);
+  c.centralNet = mk * (1 - FEE) - 45 - 25 - c.target;
+  c.centralPct = c.centralNet / (c.target + 25) * 100;
+  var v = {cls:"good", title:"Flip (arbitrage)", text:"Acheter sous la cote auprès d'un particulier et revendre sans attendre."};
+  if (mk < 750) v = {cls:"crit", title:"Passer", text:"Cote inférieure à 750 € : après frais, la marge absolue est trop faible."};
+  else if (c.risk >= 56 || (days != null && days > 30)) v = {cls:"crit", title:"Passer, sauf achat très bas", text:"Risque élevé ou revente lente. À n'envisager qu'avec un achat au moins 20 % sous la cote."};
+  else if (w.trend30 != null && w.trend30 <= -3) v = {cls:"warn", title:"Attendre", text:"La cote recule depuis un mois (" + pct(w.trend30) + "). Attendre la stabilisation avant d'acheter."};
+  else if (tr != null && tr >= 5 && c.risk < 45) v = {cls:"good", title:"Flip, conservation possible", text:"Revente rapide et tendance positive : conserver quelques mois peut s'envisager, de façon spéculative."};
+  else if (tr != null && tr < 0) v = {cls:"warn", title:"Flip rapide uniquement", text:"Tendance négative : ne pas conserver, revendre dès que possible."};
+  c.verdict = v;
+  return c;
+}
+
+/* ---------- Rendu ---------- */
+function gaugeSVG(risk){
+  var cx = 100, cy = 100, R = 82, ticks = "";
+  for (var i = 0; i < 60; i++){
+    var a = (i / 60) * 2 * Math.PI - Math.PI / 2, major = i % 5 === 0, r1 = major ? R - 12 : R - 7;
+    ticks += '<line x1="' + (cx + r1 * Math.cos(a)).toFixed(1) + '" y1="' + (cy + r1 * Math.sin(a)).toFixed(1) + '" x2="' + (cx + R * Math.cos(a)).toFixed(1) + '" y2="' + (cy + R * Math.sin(a)).toFixed(1) + '" stroke="var(--mute)" stroke-width="' + (major ? 2 : 1) + '"/>';
+  }
+  var col = risk <= 33 ? "var(--good)" : (risk <= 55 ? "var(--warn)" : "var(--crit)");
+  var end = (risk / 100) * 2 * Math.PI - Math.PI / 2, Ra = R + 6, large = risk > 50 ? 1 : 0;
+  var arc = risk > 0 ? '<path d="M ' + cx + ' ' + (cy - Ra) + ' A ' + Ra + ' ' + Ra + ' 0 ' + large + ' 1 ' + (cx + Ra * Math.cos(end)).toFixed(1) + ' ' + (cy + Ra * Math.sin(end)).toFixed(1) + '" fill="none" stroke="' + col + '" stroke-width="7" stroke-linecap="round"/>' : "";
+  var mx = cx + (R - 18) * Math.cos(end), my = cy + (R - 18) * Math.sin(end);
+  return '<svg class="gauge" viewBox="0 0 200 200" width="190" height="190" role="img" aria-label="Indice de risque ' + risk + ' sur 100">' +
+    '<circle cx="100" cy="100" r="' + (R + 6) + '" fill="none" stroke="var(--rule)" stroke-width="7"/>' + arc + ticks +
+    '<polygon points="100,12 94,2 106,2" fill="var(--ink)"/><circle cx="' + mx.toFixed(1) + '" cy="' + my.toFixed(1) + '" r="5" fill="' + col + '"/>' +
+    '<text x="100" y="108" text-anchor="middle" font-size="46" font-weight="700" fill="var(--ink)">' + risk + '</text>' +
+    '<text x="100" y="130" text-anchor="middle" font-size="14" letter-spacing="2" fill="var(--mute)">/ 100</text></svg>';
+}
+// Courbe de la cote dans le temps (un point par jour).
+function sparkSVG(points){
+  var pts = (points || []).filter(function(p){ return p.mk != null; });
+  if (pts.length < 2) return '<p class="small muted">La courbe apparaîtra après quelques jours de relevés.</p>';
+  var W = 420, H = 120, L = 8, Rr = 8, T = 18, B = 26;
+  var vals = pts.map(function(p){ return p.mk; }), lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals);
+  if (hi - lo < lo * 0.02){ var m = (hi + lo) / 2; lo = m * 0.99; hi = m * 1.01; }
+  var t0 = new Date(pts[0].d).getTime(), t1 = new Date(pts[pts.length - 1].d).getTime() || t0 + 1;
+  var x = function(d){ return L + (new Date(d).getTime() - t0) / Math.max(1, t1 - t0) * (W - L - Rr); };
+  var y = function(v){ return T + (hi - v) / (hi - lo) * (H - T - B); };
+  var line = pts.map(function(p, i){ return (i ? "L" : "M") + x(p.d).toFixed(1) + " " + y(p.mk).toFixed(1); }).join(" ");
+  var area = line + " L" + x(pts[pts.length - 1].d).toFixed(1) + " " + (H - B) + " L" + x(pts[0].d).toFixed(1) + " " + (H - B) + " Z";
+  var first = pts[0], last = pts[pts.length - 1];
+  var dfmt = function(d){ return new Date(d).toLocaleDateString("fr-FR", {day:"numeric", month:"short"}); };
+  return '<svg class="spark" viewBox="0 0 ' + W + ' ' + H + '" width="100%" role="img" aria-label="Évolution de la cote du ' + dfmt(first.d) + ' au ' + dfmt(last.d) + '">' +
+    '<path d="' + area + '" fill="var(--accent)" fill-opacity=".10"/><path d="' + line + '" fill="none" stroke="var(--accent)" stroke-width="2"/>' +
+    '<circle cx="' + x(last.d).toFixed(1) + '" cy="' + y(last.mk).toFixed(1) + '" r="4" fill="var(--accent)"/>' +
+    '<text x="' + (x(last.d) - 6).toFixed(1) + '" y="' + Math.max(12, y(last.mk) - 8).toFixed(1) + '" text-anchor="end" fill="var(--ink)" font-weight="700">' + eur(last.mk) + '</text>' +
+    '<text x="' + L + '" y="' + (H - 8) + '" fill="var(--mute)">' + dfmt(first.d) + (first.seed ? " (étude)" : "") + ' · ' + eur(first.mk) + '</text>' +
+    '<text x="' + (W - Rr) + '" y="' + (H - 8) + '" text-anchor="end" fill="var(--mute)">' + dfmt(last.d) + '</text></svg>';
+}
+function meter(name, val, basis, isLive){
+  return '<div class="meter"><div class="top"><span class="name">' + esc(name) + tag(isLive) + '</span><span class="val">' + (val == null ? "—" : val) + '</span></div>' +
+    '<div class="bar" role="img" aria-label="' + esc(name) + ' ' + (val == null ? "inconnu" : val + " sur 100") + '"><span style="width:' + (val == null ? 0 : val) + '%"></span></div>' +
+    '<div class="small muted">' + esc(basis) + '</div></div>';
+}
+function list(arr){ return arr && arr.length ? '<ul class="tight">' + arr.map(function(x){ return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>" : '<p class="small muted">Non renseigné.</p>'; }
+function sourcePill(name, s){
+  if (!s) return '<span class="pill neutral">' + name + ' : jamais lancée</span>';
+  var cls = s.status === "ok" ? "ok" : (s.status === "partielle" ? "warn" : (s.status === "erreur" ? "crit" : "neutral"));
+  return '<span class="pill ' + cls + '" title="' + esc(s.message || "") + '">' + name + ' : ' + esc(s.status) + '</span>';
+}
+
+var current = null, currentOrigin = "db";
+function render(w, origin){
+  current = w; currentOrigin = origin;
+  $("#notfound").classList.add("hidden");
+  var c = compute(w), live = w.live || {};
+  var badge = origin === "db" ? (w.mkLive ? '<span class="pill ok">Cote suivie en direct</span>' : '<span class="pill neutral">Cote de l\'étude (en attente d\'annonces)</span>') : '<span class="pill manual">Vos relevés</span>';
+  if (w.override) badge += ' <span class="pill manual">Cote recalculée sur ' + w.override + ' relevés</span>';
+  var stateRows = c.states.map(function(s){ return '<tr' + (s[2] ? ' class="ref-row"' : '') + '><td>' + esc(s[0]) + (s[3] ? tag(true) : "") + '</td><td class="num">' + eur(s[1]) + '</td></tr>'; }).join("");
+  var spec = w.specs || {};
+  var sp = [["Calibre", spec.calibre],["Réserve de marche", spec.reserve],["Diamètre", spec.diam],["Épaisseur", spec.epais],["Étanchéité", spec.etanch],["Matériau", spec.mat],["Production", w.years]]
+    .map(function(p){ return '<div><span>' + p[0] + '</span><b>' + esc(p[1] || "Non renseigné") + '</b></div>'; }).join("");
+  var bd = c.riskParts.map(function(p){ return '<div class="bd"><span>' + esc(p.name) + (p.live ? tag(true) : "") + ' <span class="muted">(' + Math.round(p.w * 100) + ' % · ' + esc(p.txt) + ')</span></span><b class="num">' + p.v + '</b><div class="bar"><span style="width:' + p.v + '%;background:' + (p.v <= 33 ? "var(--good)" : p.v <= 55 ? "var(--warn)" : "var(--crit)") + '"></span></div></div>'; }).join("");
+  var src = (w.sources || []).map(function(s){ return '<li><a href="' + esc(s[1]) + '" target="_blank" rel="noopener">' + esc(s[0]) + '</a></li>'; }).join("");
+  var S = MARKET.sources || {};
+  var liveBlock = origin !== "db" ? "" :
+  '<section class="plate" aria-labelledby="live-title"><p class="label" id="live-title">Marché en direct · mis à jour ' + esc(ago(MARKET.updatedAt)) + '</p>' +
+    '<div class="live-grid"><div><div class="stats">' +
+      '<div><span class="small muted">Annonces eBay actives</span><b>' + (live.ebayActive != null ? live.ebayActive : "—") + '</b></div>' +
+      '<div><span class="small muted">Prix demandé médian (occasion)</span><b>' + eur(live.askMedian) + '</b><span class="small muted">' + (live.nObs ? live.nObs + (live.nObs > 1 ? " annonces" : " annonce") : "") + '</span></div>' +
+      '<div><span class="small muted">Prix demandé médian (neuf)</span><b>' + eur(live.askNewMedian) + '</b><span class="small muted">' + (live.nNew ? live.nNew + (live.nNew > 1 ? " annonces" : " annonce") : "") + '</span></div>' +
+      '<div><span class="small muted">Reddit, 30 jours (offres / demandes)</span><b>' + (live.redditWts30 != null ? live.redditWts30 + " / " + live.redditWtb30 : "—") + '</b></div>' +
+      '<div><span class="small muted">Écoulement sur 30 jours</span><b>' + (live.sellThrough30 != null ? fr(live.sellThrough30) + " %" : "—") + '</b>' + (live.sellThrough30 == null && live.trackingSince ? '<span class="small muted">disponible après 30 jours de suivi</span>' : '') + '</div>' +
+      '<div><span class="small muted">Tendance sur 30 jours</span><b>' + (w.trend30 != null ? pct(w.trend30) : "—") + '</b></div>' +
+    '</div><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px">' + sourcePill("eBay", S.ebay) + sourcePill("Reddit", S.reddit) + sourcePill("BCE", S.ecb) + '</div></div>' +
+    '<div>' + sparkSVG(HISTORY[w.id]) + '</div></div></section>';
+  var html =
+  '<section class="plate" aria-labelledby="w-title"><div class="id-strip"><span class="ref" id="w-title">' + esc(w.brand) + ' ' + esc(w.ref) + '</span><span>' + esc(w.model) + '</span>' + badge + '<span class="pill neutral">' + esc(w.status || "Statut inconnu") + '</span></div></section>' +
+  liveBlock +
+  '<div class="grid2">' +
+    '<section class="plate"><p class="label">Prix du marché par état</p>' +
+      '<table><thead><tr><th>État</th><th class="num">Prix de transaction estimé</th></tr></thead><tbody>' + stateRows + '</tbody></table>' +
+      '<p class="small muted" style="margin:8px 0 0">Prix neuf : ' + esc(w.retail && w.retail.label ? w.retail.label : "non renseigné") + '. Fourchette : ' + eur(w.low) + ' à ' + eur(w.high) + '. Point de départ : ' + esc(w.anchor && w.anchor.basis) + '.</p>' +
+    '</section>' +
+    '<section class="plate"><p class="label">Indice de risque à la revente</p>' +
+      '<div class="gauge-wrap">' + gaugeSVG(c.risk) + '<div><h2>Risque ' + c.riskLabel.toLowerCase() + '</h2><div class="breakdown">' + bd + '</div>' +
+      (c.riskNeutral.length ? '<p class="small muted" style="margin:6px 0 0">Valeur neutre utilisée pour : ' + esc(c.riskNeutral.join(", ")) + '.</p>' : '') + '</div></div></section>' +
+  '</div>' +
+  '<section class="plate"><p class="label">Demande, offre et hype du moment</p><div class="grid3">' +
+    meter("Demande", c.demand, c.demandBasis, c.demandLive) + meter("Pression de l'offre", c.offer, c.offerBasis, c.offerLive) + meter("Hype", c.hype, c.hypeBasis, c.hypeLive) +
+  '</div><p class="small muted" style="margin:10px 0 0">Tendance sur 12 mois' + tag(w.trend.live) + ' : <b>' + (w.trend.v != null ? pct(w.trend.v) : "inconnue") + '</b>' + (w.trend.note ? " · " + esc(w.trend.note) : "") + '.</p></section>' +
+  '<section class="plate"><div class="verdict ' + c.verdict.cls + '"><h3>' + esc(c.verdict.title) + '</h3><p style="margin:0">' + esc(c.verdict.text) + '</p></div>' +
+    '<div class="kv" style="margin-top:12px">' +
+      '<div><span class="small muted">Prix d\'achat cible (−15 %)</span><b>' + eur(c.target) + '</b></div>' +
+      '<div><span class="small muted">Prix d\'achat maximal</span><b>' + eur(c.maxBuy) + '</b></div>' +
+      '<div><span class="small muted">Seuil de rentabilité</span><b>' + eur(c.breakeven) + '</b></div>' +
+      '<div><span class="small muted">Marge nette centrale</span><b>' + eur(c.centralNet) + ' <span class="small">(' + pct(c.centralPct) + ')</span></b></div>' +
+    '</div><p class="small muted" style="margin:8px 0 0">Hypothèses : revente à la cote sur Chrono24 (6,5 %), 25 € de transport entrant, 45 € d\'envoi assuré.</p></section>' +
+  '<section class="plate" aria-labelledby="calc-title"><p class="label" id="calc-title">Calculateur de marge</p><div class="calc">' +
+      '<div class="field"><label for="c-buy">Prix d\'achat (€)</label><input id="c-buy" type="number" inputmode="decimal" value="' + c.target + '"></div>' +
+      '<div class="field"><label for="c-sell">Prix de revente (€)</label><input id="c-sell" type="number" inputmode="decimal" value="' + Math.round(w.mk) + '"></div>' +
+      '<div class="field"><label for="c-ship">Envois et transport (€)</label><input id="c-ship" type="number" inputmode="decimal" value="70"></div>' +
+      '<div class="field"><label for="c-fee">Commission (%)</label><input id="c-fee" type="number" step="0.1" value="6.5"></div>' +
+    '</div><p id="calc-out" style="margin:10px 0 0;font-weight:600"></p></section>' +
+  '<section class="plate"><p class="label">Fiche technique et revente</p><div class="spec">' + sp + '</div><div class="grid2" style="margin-top:12px">' +
+      '<div><h2 style="font-size:18px">Révision et garantie</h2><p class="small" style="margin:4px 0">Intervalle : ' + esc(w.service && w.service.interval || "Non renseigné") + '. Coût estimé : ' + (w.service && w.service.low != null ? eur(w.service.low) + " à " + eur(w.service.high) : "non renseigné") + '.</p><p class="small" style="margin:4px 0">Garantie : ' + esc(w.warranty || "Non renseignée") + '</p>' +
+      '<h2 style="font-size:18px;margin-top:10px">Points d\'authentification</h2>' + list(w.auth) + '</div>' +
+      '<div><h2 style="font-size:18px">Pièges à la revente</h2>' + list(w.pitfalls) + '<h2 style="font-size:18px;margin-top:10px">Générations et variantes</h2>' + list(w.generations) +
+      '<p class="small" style="margin:8px 0 0">Décote d\'une montre seule (sans boîte ni papiers) : ' + Math.round((w.naked || 0.12) * 100) + ' %.</p></div></div></section>' +
+  '<section class="plate" aria-labelledby="obs-title"><p class="label" id="obs-title">Recalculer la cote avec vos relevés</p>' +
+    '<p class="small muted" style="margin:0 0 8px">Collez des prix relevés sur Chrono24, Leboncoin ou les forums (en euros). Le 1er quartile, la médiane et le 3e quartile remplacent la cote, pour cette session seulement.</p>' +
+    '<div class="field"><label for="obs">Prix relevés (€)</label><textarea id="obs" placeholder="2450 2600 2690 2750 2890"></textarea></div>' +
+    '<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"><button type="button" id="obs-apply">Recalculer</button>' + (w.override ? '<button type="button" class="ghost" id="obs-reset">Revenir à la cote suivie</button>' : '') + '</div>' +
+    '<p id="obs-msg" class="small" style="margin:6px 0 0"></p></section>' +
+  (src ? '<section class="plate"><p class="label">Sources de l\'étude</p><ul class="tight small">' + src + '</ul></section>' : '');
+  $("#result").innerHTML = html;
+  ["#c-buy","#c-sell","#c-ship","#c-fee"].forEach(function(id){ $(id).addEventListener("input", calc); });
+  calc();
+  $("#obs-apply").addEventListener("click", applyObs);
+  var rs = $("#obs-reset"); if (rs) rs.addEventListener("click", function(){ if (w._orig) render(w._orig, w._origOrigin); });
+  Array.prototype.forEach.call(document.querySelectorAll(".chip"), function(ch){ ch.setAttribute("aria-pressed", ch.dataset.id === w.id ? "true" : "false"); });
+}
+function calc(){
+  var b = parseFloat($("#c-buy").value) || 0, s = parseFloat($("#c-sell").value) || 0, sh = parseFloat($("#c-ship").value) || 0, f = (parseFloat($("#c-fee").value) || 0) / 100;
+  var net = s * (1 - f) - sh - b, cost = b + sh;
+  $("#calc-out").innerHTML = 'Marge nette : <span style="color:' + (net >= 0 ? "var(--good)" : "var(--crit)") + '">' + eur(net) + '</span> (' + (cost ? pct(net / cost * 100) : "—") + ' du coût) · Seuil de rentabilité : ' + eur((b + sh) / (1 - f));
+}
+function applyObs(){
+  var nums = parseNums($("#obs").value), msg = $("#obs-msg");
+  if (nums.length < 3){ msg.innerHTML = '<span class="err">Il faut au moins 3 prix pour recalculer la cote.</span>'; return; }
+  var w = current, copy = JSON.parse(JSON.stringify(w));
+  copy._orig = w._orig || w; copy._origOrigin = w._origOrigin || currentOrigin;
+  copy.mk = quantile(nums, 0.5); copy.low = quantile(nums, 0.25); copy.high = quantile(nums, 0.75); copy.mkLive = false;
+  copy.anchor = Object.assign({}, copy.anchor, {basis:nums.length + " relevés saisis. Des prix demandés surestiment souvent de 5 à 15 % les prix de vente réels"});
+  copy.override = nums.length;
+  render(copy, currentOrigin);
+}
+
+/* ---------- Référence non suivie ---------- */
+function showNotFound(q){
+  var nf = $("#notfound");
+  nf.classList.remove("hidden");
+  var label = [q.brand, q.model, q.ref].filter(Boolean).join(" ");
+  var wf = "https://github.com/" + REPO + "/actions/workflows/add-reference.yml";
+  nf.innerHTML = '<p class="label">Référence non suivie</p><h2>' + esc(label || "Montre inconnue") + '</h2>' +
+    '<p class="small muted" style="margin:4px 0 12px">Le comptoir suit ' + REFS.length + ' références. Deux façons d\'analyser celle-ci.</p><div class="grid2">' +
+    '<div class="notice"><b>L\'ajouter au suivi automatique</b><ol class="small" style="margin:6px 0 0;padding-left:18px">' +
+      '<li>Ouvrez <a href="' + wf + '" target="_blank" rel="noopener">le workflow « Ajouter une référence »</a> sur GitHub.</li>' +
+      '<li>Cliquez sur « Run workflow » et saisissez la marque (' + esc(q.brand || "…") + '), le modèle et la référence (' + esc(q.ref || "…") + ').</li>' +
+      '<li>Environ 2 minutes plus tard, la montre apparaît ici et sa cote se met à jour toutes les 6 heures. Si la clé Claude est configurée, sa fiche (calibre, authentification, pièges) est remplie automatiquement.</li></ol></div>' +
+    '<form class="notice" id="man-form"><b>L\'analyser tout de suite avec vos données</b><div class="calc" style="grid-template-columns:1fr 1fr;margin-top:8px">' +
+      '<div class="field"><label for="m-retail">Prix neuf (€)</label><input id="m-retail" type="number"></div>' +
+      '<div class="field"><label for="m-days">Délai de vente estimé (jours)</label><input id="m-days" type="number"></div>' +
+      '<div class="field"><label for="m-trend">Tendance 12 mois (%)</label><input id="m-trend" type="number" step="0.1"></div>' +
+      '<div class="field"><label for="m-fake">Risque de contrefaçon</label><select id="m-fake"><option value="faible">Faible</option><option value="moyen" selected>Moyen</option><option value="eleve">Élevé</option></select></div>' +
+      '<div class="field"><label for="m-svc">Coût de révision (€)</label><input id="m-svc" type="number"></div></div>' +
+      '<div class="field" style="margin-top:8px"><label for="m-prices">Prix relevés (€, 3 minimum)</label><textarea id="m-prices" placeholder="1450 1500 1620 1700"></textarea></div>' +
+      '<button type="submit" style="margin-top:8px">Analyser avec mes données</button><p id="man-msg" class="small" style="margin:6px 0 0"></p></form></div>';
+  $("#result").innerHTML = "";
+  $("#man-form").addEventListener("submit", function(e){ e.preventDefault(); runManual(q); });
+}
+function runManual(q){
+  var nums = parseNums($("#m-prices").value);
+  if (nums.length < 3){ $("#man-msg").innerHTML = '<span class="err">Saisissez au moins 3 prix relevés.</span>'; return; }
+  var num = function(id){ var v = parseFloat($(id).value); return isNaN(v) ? null : v; };
+  var svc = num("#m-svc"), retail = num("#m-retail");
+  var w = { id:"manual", brand:q.brand || "", model:q.model || "", ref:q.ref || "Référence saisie", status:"Données saisies", years:"", specs:{},
+    retail:{eur:retail, label:retail ? eur(retail) + " (saisi)" : null},
+    anchor:{basis:nums.length + " relevés saisis"}, mk:quantile(nums, 0.5), low:quantile(nums, 0.25), high:quantile(nums, 0.75), mkLive:false,
+    days:{v:num("#m-days"), live:false}, trend:{v:num("#m-trend"), live:false}, vol:{v:null, live:false}, trend30:null,
+    offer:null, hype:null, fake:$("#m-fake").value, service:svc != null ? {interval:"Non renseigné", low:svc, high:svc} : null,
+    warranty:"", naked:0.12, auth:[], pitfalls:[], generations:[], sources:[], live:null };
+  render(w, "manual");
+}
+
+/* ---------- Démarrage ---------- */
+function shortRef(w){ return w.brand + " " + String(w.ref).replace(/^M(?=\d)/, "").split("-")[0].split(" /")[0]; }
+function buildChips(){
+  var chips = $("#chips"); chips.innerHTML = "";
+  REFS.forEach(function(r){
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "chip"; b.dataset.id = r.id; b.textContent = shortRef(r);
+    b.addEventListener("click", function(){ $("#in-brand").value = r.brand; $("#in-model").value = r.model; $("#in-ref").value = r.ref; location.hash = r.id; });
+    chips.appendChild(b);
+  });
+}
+function header(){
+  var fx = MARKET.fx && MARKET.fx.rates && MARKET.fx.rates.USD;
+  $("#fx-line").textContent = (fx ? "1 € = " + fr(fx) + " $ (" + (MARKET.fx.source || "") + ")" : "Taux de change indisponible") + " · données mises à jour " + ago(MARKET.updatedAt);
+  $("#repo-link").href = "https://github.com/" + REPO;
+}
+function showFromHash(){
+  var id = decodeURIComponent((location.hash || "").slice(1));
+  var r = REFS.filter(function(x){ return x.id === id; })[0] || REFS[0];
+  if (!r) return;
+  $("#in-brand").value = r.brand; $("#in-model").value = r.model; $("#in-ref").value = r.ref;
+  render(effective(r), "db");
+}
+$("#search-form").addEventListener("submit", function(e){
+  e.preventDefault();
+  var q = {brand:$("#in-brand").value.trim(), model:$("#in-model").value.trim(), ref:$("#in-ref").value.trim()};
+  if (!q.brand && !q.model && !q.ref) return;
+  var r = find(q.brand, q.model, q.ref);
+  if (r){ if (location.hash.slice(1) === r.id) render(effective(r), "db"); else location.hash = r.id; }
+  else showNotFound(q);
+});
+window.addEventListener("hashchange", showFromHash);
+function refresh(){
+  var before = MARKET.updatedAt;
+  loadAll().then(function(){
+    header();
+    if (MARKET.updatedAt !== before && current && currentOrigin === "db" && !current.override){
+      var r = REFS.filter(function(x){ return x.id === current.id; })[0];
+      if (r) render(effective(r), "db");
+      buildChips();
+    }
+  }).catch(function(){});
+}
+loadAll().then(function(){ header(); buildChips(); showFromHash(); setInterval(refresh, REFRESH_MS); })
+  .catch(function(e){
+    $("#fx-line").textContent = "Données indisponibles";
+    $("#result").innerHTML = '<section class="plate"><p class="err">Impossible de charger les données (' + esc(e.message) + ').</p><p class="small">Ouvrez le site depuis GitHub Pages, ou en local avec <code>npm run preview</code>.</p></section>';
+  });
+})();
+</script>
+</body>
+</html>

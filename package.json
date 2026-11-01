@@ -1,0 +1,16 @@
+{
+  "name": "comptoir-cote",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cote, demande, offre et risque de revente de montres d'occasion, mis à jour automatiquement.",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "update": "node scripts/update-market.mjs",
+    "update:demo": "node scripts/update-market.mjs --mock test/fixtures",
+    "add": "node scripts/add-reference.mjs",
+    "build": "node scripts/build-site.mjs",
+    "preview": "node scripts/build-site.mjs && npx --yes http-server _site -p 8080"
+  }
+}
