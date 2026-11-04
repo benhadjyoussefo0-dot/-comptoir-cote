@@ -32,7 +32,7 @@ Toutes les 6 h ─► GitHub Actions ─► BCE (taux de change, sans clé)
 - **Cote :** elle part de la cote de l'étude, puis se rapproche à chaque passage de la médiane des prix demandés en occasion, moins 8 % (un prix demandé surestime le prix de vente de 5 à 15 %). Plus il y a d'annonces, plus elle bouge, avec au plus 60 % de l'écart absorbé par passage.
 - **Délai de vente :** une annonce eBay qui disparaît avant sa date de fin est comptée comme « écoulée » (vendue ou retirée). Son ancienneté donne le délai de vente estimé, dès 5 annonces écoulées.
 - **Tendances :** sur 30 jours dès le premier mois de suivi. La tendance sur 12 mois et la volatilité sont calculées par l'historique dès qu'il est assez long ; avant, ce sont les valeurs de l'étude.
-- **Chrono24 n'est pas interrogé :** il n'a pas d'interface publique et ses conditions interdisent la collecte automatique. Pour l'intégrer, collez vos relevés dans la case « Recalculer la cote avec vos relevés ».
+- **Chrono24 se relève à la main :** il n'a pas d'interface publique et bloque les robots, y compris ceux qui tournent sur les serveurs de GitHub. Ses prix entrent dans la cote par les relevés copiés-collés depuis votre navigateur (voir « Ajouter les prix Chrono24 »).
 
 Ce n'est pas du temps réel à la seconde. Aucune source gratuite et autorisée ne le permet pour les montres d'occasion.
 
@@ -81,6 +81,18 @@ On peut aussi modifier `data/references.json` à la main. Chaque fiche contient 
 - `queries` : les requêtes envoyées à eBay et Reddit ;
 - `match.any` et `match.none` : les mots qu'un titre d'annonce doit contenir ou ne pas contenir. C'est ce qui évite de mélanger une 79030N et une 79030B.
 
+## Ajouter les prix Chrono24
+
+Sur la fiche d'une montre, section **Relevé Chrono24** :
+
+1. Cliquez sur **Ouvrir la recherche … sur Chrono24** : la recherche s'ouvre déjà réglée sur la référence. Filtrez l'état ou la boîte et les papiers si besoin.
+2. Sur la page de résultats, sélectionnez tout et copiez : **Ctrl+A** puis **Ctrl+C** (Cmd sur Mac ; sur téléphone, appui long, « Tout sélectionner », « Copier »).
+3. Collez dans la case et cliquez sur **Enregistrer le relevé**.
+
+Le site lit les prix de la page, écarte les frais de port, les filtres de prix, les prix sans rapport (hors de 0,4 à 2,5 fois la cote) et les valeurs atypiques, puis calcule la médiane. La cote se rapproche de cette médiane moins 8 %, avec un poids qui dépend du nombre de prix (60 % au plus). Ce poids reste plein pendant 14 jours, baisse ensuite et s'annule à 60 jours : un relevé par semaine ou deux suffit. L'historique des relevés et l'écart d'un relevé à l'autre s'affichent sous la case.
+
+Les relevés sont conservés dans le navigateur (stockage local) : ils ne passent pas d'un appareil à l'autre et disparaissent si vous effacez les données du site.
+
 ## En local
 
 ```bash
@@ -97,6 +109,7 @@ Node 20 ou plus, aucune dépendance.
 | Chemin | Rôle |
 | --- | --- |
 | `site/index.html` | Le site (une page, sans dépendance) |
+| `site/chrono24.js` | La lecture des relevés Chrono24 et leur poids dans la cote |
 | `data/references.json` | Les fiches des montres suivies et la cote de départ de l'étude |
 | `data/market.json` | Les indicateurs en direct, réécrits à chaque passage |
 | `data/history.json` | Un point par jour et par montre (environ 13 mois conservés) |
@@ -107,7 +120,7 @@ Node 20 ou plus, aucune dépendance.
 
 ## Limites
 
-- Les prix eBay et Reddit sont des **prix demandés**, et les annonces Reddit sont surtout américaines. La décote de 8 % est une moyenne : vérifiez avec vos relevés avant d'acheter.
+- Les prix eBay, Chrono24 et Reddit sont des **prix demandés**, et les annonces Reddit sont surtout américaines. La décote de 8 % est une moyenne : vérifiez avec vos relevés avant d'acheter.
 - Une annonce disparue n'est pas forcément vendue (elle peut avoir été retirée).
 - Les coefficients par état (×1,10 pour une neuve, −10 à −15 % pour une montre seule…) sont des repères, pas des mesures.
 - Outil d'aide à la décision, pas un conseil en investissement. Aucune marge n'est garantie.

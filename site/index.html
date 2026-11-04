@@ -65,6 +65,7 @@ button.ghost{background:transparent;color:var(--accent)}
 .pill.warn{background:var(--warn-soft);color:var(--warn);border-color:var(--warn)}
 .pill.crit{background:var(--crit-soft);color:var(--crit);border-color:var(--crit)}
 .pill.manual{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
+.ok-text{color:var(--good);font-weight:600}
 .pill.neutral{background:var(--steel);color:var(--mute);border-color:var(--rule)}
 .src{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-radius:3px;padding:1px 5px;vertical-align:2px}
 .src.live{background:var(--good-soft);color:var(--good)}
@@ -148,15 +149,17 @@ footer{color:var(--mute);font-size:12.5px;display:grid;gap:6px}
   <main id="result" aria-live="polite"></main>
 
   <footer>
-    <div><b>D'où viennent les chiffres.</b> Au départ, la cote de chaque montre est celle de l'étude du 1<sup>er</sup> novembre 2026. Toutes les 6 heures, un robot GitHub relève les annonces eBay (France, Allemagne, États-Unis) et r/Watchexchange, ainsi que le taux BCE. La cote est rapprochée de la médiane des prix demandés, moins 8 % : un prix demandé surestime le prix de vente. Plus il y a d'annonces, plus la cote bouge. Une annonce eBay qui disparaît avant sa date de fin est comptée comme « écoulée » ; son ancienneté donne le délai de vente estimé. Chrono24 n'est pas interrogé : il n'a pas d'interface publique et interdit la collecte automatique.</div>
+    <div><b>D'où viennent les chiffres.</b> Au départ, la cote de chaque montre est celle de l'étude du 1<sup>er</sup> novembre 2026. Toutes les 6 heures, un robot GitHub relève les annonces eBay (France, Allemagne, États-Unis) et r/Watchexchange, ainsi que le taux BCE. La cote est rapprochée de la médiane des prix demandés, moins 8 % : un prix demandé surestime le prix de vente. Plus il y a d'annonces, plus la cote bouge. Une annonce eBay qui disparaît avant sa date de fin est comptée comme « écoulée » ; son ancienneté donne le délai de vente estimé. Chrono24 n'a pas d'interface publique et bloque les robots : ses prix viennent de vos relevés (page de résultats copiée-collée), conservés dans ce navigateur. Un relevé pèse dans la cote selon son nombre de prix (60 % au plus), à plein pendant 14 jours, puis de moins en moins jusqu'à 60 jours.</div>
     <div><b>Indice de risque (0 = sûr, 100 = très risqué).</b> 25 % liquidité (délai de vente, de 7 à 60 jours), 25 % tendance (de +5 % à −15 % sur 12 mois), 15 % volatilité (de 5 à 25 %), 20 % contrefaçon (faible 20, moyen 50, élevé 80), 15 % coût de révision rapporté à la cote (0 à 25 %). Les étiquettes <span class="src live">direct</span> et <span class="src study">étude</span> indiquent la provenance de chaque indicateur.</div>
     <div>Outil d'aide à la décision, pas un conseil en investissement. Aucune marge n'est garantie. <a id="repo-link" href="#">Code source et méthode sur GitHub</a>.</div>
   </footer>
 </div>
 
+<script src="chrono24.js"></script>
 <script>
 (function(){
 "use strict";
+var C24 = window.Chrono24;
 // Dépôt GitHub déduit de l'adresse du site (compte.github.io/nom-du-dépôt/), pour suivre un éventuel renommage.
 var REPO = (function () {
   var host = location.hostname.match(/^([^.]+)\.github\.io$/i);
@@ -176,14 +179,17 @@ function pct(v, d){ return v == null || isNaN(v) ? "—" : (v > 0 ? "+" : "") + 
 function fr(v){ return String(v).replace(".", ","); }
 function norm(s){ return String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim(); }
 function quantile(sorted, q){ if (!sorted.length) return null; var pos = (sorted.length - 1) * q, lo = Math.floor(pos), hi = Math.ceil(pos); return sorted[lo] + (sorted[hi] - sorted[lo]) * (pos - lo); }
-function parseNums(text){
-  var out = [];
-  String(text || "").split(/[\n,;|\/€]+/).forEach(function(chunk){
-    chunk = chunk.trim(); if (!chunk) return;
-    if (/^\d{1,2}[  .]\d{3}$/.test(chunk)) { out.push(parseFloat(chunk.replace(/[  .]/g, ""))); return; }
-    chunk.split(/\s+/).forEach(function(p){ if (/^\d{1,3}\.\d{3}$/.test(p)) p = p.replace(".", ""); p = p.replace(/[^\d.]/g, ""); if (p) out.push(parseFloat(p)); });
-  });
-  return out.filter(function(n){ return n >= 100 && n < 500000; }).sort(function(a, b){ return a - b; });
+function usdRate(){ return MARKET.fx && MARKET.fx.rates && MARKET.fx.rates.USD || null; }
+function dshort(iso){ return new Date(iso).toLocaleDateString("fr-FR", {day:"2-digit", month:"2-digit"}); }
+function dlong(iso){ var d = new Date(iso); return d.toLocaleDateString("fr-FR") + " " + d.toLocaleTimeString("fr-FR", {hour:"2-digit", minute:"2-digit"}); }
+function droppedText(d){
+  var p = [];
+  if (d.shipping) p.push(d.shipping + " frais de port");
+  if (d.filter) p.push(d.filter + " filtre" + (d.filter > 1 ? "s" : "") + " de prix");
+  if (d.range) p.push(d.range + " hors fourchette (accessoires, autres versions)");
+  if (d.outlier) p.push(d.outlier + " atypique" + (d.outlier > 1 ? "s" : ""));
+  if (d.currency) p.push(d.currency + " en dollars sans taux de change");
+  return p.length ? "Écartés : " + p.join(", ") + "." : "";
 }
 function ago(iso){
   if (!iso) return "jamais";
@@ -217,6 +223,15 @@ function effective(ref){
   w.trend30 = live ? live.trend30 : null;
   w.vol = has(live && live.vol) ? {v:live.vol, live:true} : {v:st.vol, live:false};
   w.salesYear = st.salesYear; w.salesNote = st.salesNote; w.listings = st.listings;
+  // Dernier relevé Chrono24 : rapproche la cote de ses prix demandés (décote de 8 %).
+  w.mkBase = w.mk;
+  w.c24 = C24 ? C24.latest(ref.id) : null;
+  w.c24w = 0;
+  if (w.c24){
+    var b = C24.blend({mk:w.mk, low:w.low, high:w.high}, w.c24);
+    w.c24w = b.weight;
+    if (b.weight){ w.mk = b.mk; w.low = b.low; w.high = b.high; }
+  }
   return w;
 }
 
@@ -353,14 +368,26 @@ function sourcePill(name, s){
   return '<span class="pill ' + cls + '" title="' + esc(s.message || "") + '">' + name + ' : ' + esc(s.status) + '</span>';
 }
 
-var current = null, currentOrigin = "db";
+function c24Pill(w){
+  if (!w.c24) return '<span class="pill neutral">Chrono24 : aucun relevé</span>';
+  return '<span class="pill ' + (w.c24w ? "ok" : "warn") + '">Chrono24 : relevé du ' + dshort(w.c24.date) + '</span>';
+}
+
+var current = null, currentOrigin = "db", flash = "";
 function render(w, origin){
   current = w; currentOrigin = origin;
   $("#notfound").classList.add("hidden");
   var c = compute(w), live = w.live || {};
-  var badge = origin === "db" ? (w.mkLive ? '<span class="pill ok">Cote suivie en direct</span>' : '<span class="pill neutral">Cote de l\'étude (en attente d\'annonces)</span>') : '<span class="pill manual">Vos relevés</span>';
-  if (w.override) badge += ' <span class="pill manual">Cote recalculée sur ' + w.override + ' relevés</span>';
-  var stateRows = c.states.map(function(s){ return '<tr' + (s[2] ? ' class="ref-row"' : '') + '><td>' + esc(s[0]) + (s[3] ? tag(true) : "") + '</td><td class="num">' + eur(s[1]) + '</td></tr>'; }).join("");
+  var badge;
+  if (origin !== "db") badge = '<span class="pill manual">Vos relevés</span>';
+  else if (w.mkLive) badge = '<span class="pill ok">Cote suivie en direct (eBay)</span>';
+  else if (w.c24w) badge = '<span class="pill ok">Cote de l\'étude ajustée avec Chrono24</span>';
+  else badge = '<span class="pill neutral">Cote de l\'étude (en attente d\'annonces)</span>';
+  if (origin === "db" && w.c24){
+    badge += w.c24w ? ' <span class="pill manual">Chrono24 : relevé du ' + dshort(w.c24.date) + ', poids ' + Math.round(w.c24w * 100) + ' %</span>'
+                    : ' <span class="pill warn">Relevé Chrono24 trop ancien (' + dshort(w.c24.date) + ') : refaites-en un</span>';
+  }
+  var stateRows = c.states.map(function(s){ return '<tr' + (s[2] ? ' class="ref-row"' : '') + '><td>' + esc(s[0]) + (s[3] || (s[2] && w.c24w) ? tag(true) : "") + '</td><td class="num">' + eur(s[1]) + '</td></tr>'; }).join("");
   var spec = w.specs || {};
   var sp = [["Calibre", spec.calibre],["Réserve de marche", spec.reserve],["Diamètre", spec.diam],["Épaisseur", spec.epais],["Étanchéité", spec.etanch],["Matériau", spec.mat],["Production", w.years]]
     .map(function(p){ return '<div><span>' + p[0] + '</span><b>' + esc(p[1] || "Non renseigné") + '</b></div>'; }).join("");
@@ -373,18 +400,20 @@ function render(w, origin){
       '<div><span class="small muted">Annonces eBay actives</span><b>' + (live.ebayActive != null ? live.ebayActive : "—") + '</b></div>' +
       '<div><span class="small muted">Prix demandé médian (occasion)</span><b>' + eur(live.askMedian) + '</b><span class="small muted">' + (live.nObs ? live.nObs + (live.nObs > 1 ? " annonces" : " annonce") : "") + '</span></div>' +
       '<div><span class="small muted">Prix demandé médian (neuf)</span><b>' + eur(live.askNewMedian) + '</b><span class="small muted">' + (live.nNew ? live.nNew + (live.nNew > 1 ? " annonces" : " annonce") : "") + '</span></div>' +
+      '<div><span class="small muted">Chrono24, prix demandé médian</span><b>' + (w.c24 ? eur(w.c24.median) : "—") + '</b><span class="small muted">' + (w.c24 ? w.c24.n + " prix · relevé du " + dshort(w.c24.date) : '<a href="#c24-title">faire un relevé</a>') + '</span></div>' +
       '<div><span class="small muted">Reddit, 30 jours (offres / demandes)</span><b>' + (live.redditWts30 != null ? live.redditWts30 + " / " + live.redditWtb30 : "—") + '</b></div>' +
       '<div><span class="small muted">Écoulement sur 30 jours</span><b>' + (live.sellThrough30 != null ? fr(live.sellThrough30) + " %" : "—") + '</b>' + (live.sellThrough30 == null && live.trackingSince ? '<span class="small muted">disponible après 30 jours de suivi</span>' : '') + '</div>' +
       '<div><span class="small muted">Tendance sur 30 jours</span><b>' + (w.trend30 != null ? pct(w.trend30) : "—") + '</b></div>' +
-    '</div><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px">' + sourcePill("eBay", S.ebay) + sourcePill("Reddit", S.reddit) + sourcePill("BCE", S.ecb) + '</div></div>' +
+    '</div><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px">' + sourcePill("eBay", S.ebay) + c24Pill(w) + sourcePill("Reddit", S.reddit) + sourcePill("BCE", S.ecb) + '</div></div>' +
     '<div>' + sparkSVG(HISTORY[w.id]) + '</div></div></section>';
   var html =
   '<section class="plate" aria-labelledby="w-title"><div class="id-strip"><span class="ref" id="w-title">' + esc(w.brand) + ' ' + esc(w.ref) + '</span><span>' + esc(w.model) + '</span>' + badge + '<span class="pill neutral">' + esc(w.status || "Statut inconnu") + '</span></div></section>' +
   liveBlock +
+  c24Section(w, origin) +
   '<div class="grid2">' +
     '<section class="plate"><p class="label">Prix du marché par état</p>' +
       '<table><thead><tr><th>État</th><th class="num">Prix de transaction estimé</th></tr></thead><tbody>' + stateRows + '</tbody></table>' +
-      '<p class="small muted" style="margin:8px 0 0">Prix neuf : ' + esc(w.retail && w.retail.label ? w.retail.label : "non renseigné") + '. Fourchette : ' + eur(w.low) + ' à ' + eur(w.high) + '. Point de départ : ' + esc(w.anchor && w.anchor.basis) + '.</p>' +
+      '<p class="small muted" style="margin:8px 0 0">Prix neuf : ' + esc(w.retail && w.retail.label ? w.retail.label : "non renseigné") + '. Fourchette : ' + eur(w.low) + ' à ' + eur(w.high) + '. Point de départ : ' + esc(w.anchor && w.anchor.basis) + '.' + (w.c24w ? ' Ajustée avec le relevé Chrono24 du ' + dshort(w.c24.date) + ' (' + w.c24.n + ' prix, médiane demandée ' + eur(w.c24.median) + ', décote de 8 %).' : '') + '</p>' +
     '</section>' +
     '<section class="plate"><p class="label">Indice de risque à la revente</p>' +
       '<div class="gauge-wrap">' + gaugeSVG(c.risk) + '<div><h2>Risque ' + c.riskLabel.toLowerCase() + '</h2><div class="breakdown">' + bd + '</div>' +
@@ -411,17 +440,13 @@ function render(w, origin){
       '<h2 style="font-size:18px;margin-top:10px">Points d\'authentification</h2>' + list(w.auth) + '</div>' +
       '<div><h2 style="font-size:18px">Pièges à la revente</h2>' + list(w.pitfalls) + '<h2 style="font-size:18px;margin-top:10px">Générations et variantes</h2>' + list(w.generations) +
       '<p class="small" style="margin:8px 0 0">Décote d\'une montre seule (sans boîte ni papiers) : ' + Math.round((w.naked || 0.12) * 100) + ' %.</p></div></div></section>' +
-  '<section class="plate" aria-labelledby="obs-title"><p class="label" id="obs-title">Recalculer la cote avec vos relevés</p>' +
-    '<p class="small muted" style="margin:0 0 8px">Collez des prix relevés sur Chrono24, Leboncoin ou les forums (en euros). Le 1er quartile, la médiane et le 3e quartile remplacent la cote, pour cette session seulement.</p>' +
-    '<div class="field"><label for="obs">Prix relevés (€)</label><textarea id="obs" placeholder="2450 2600 2690 2750 2890"></textarea></div>' +
-    '<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"><button type="button" id="obs-apply">Recalculer</button>' + (w.override ? '<button type="button" class="ghost" id="obs-reset">Revenir à la cote suivie</button>' : '') + '</div>' +
-    '<p id="obs-msg" class="small" style="margin:6px 0 0"></p></section>' +
   (src ? '<section class="plate"><p class="label">Sources de l\'étude</p><ul class="tight small">' + src + '</ul></section>' : '');
   $("#result").innerHTML = html;
   ["#c-buy","#c-sell","#c-ship","#c-fee"].forEach(function(id){ $(id).addEventListener("input", calc); });
   calc();
-  $("#obs-apply").addEventListener("click", applyObs);
-  var rs = $("#obs-reset"); if (rs) rs.addEventListener("click", function(){ if (w._orig) render(w._orig, w._origOrigin); });
+  $("#c24-save").addEventListener("click", saveC24);
+  var undo = $("#c24-undo"); if (undo) undo.addEventListener("click", undoC24);
+  if (flash){ $("#c24-msg").innerHTML = flash; flash = ""; }
   Array.prototype.forEach.call(document.querySelectorAll(".chip"), function(ch){ ch.setAttribute("aria-pressed", ch.dataset.id === w.id ? "true" : "false"); });
 }
 function calc(){
@@ -429,15 +454,56 @@ function calc(){
   var net = s * (1 - f) - sh - b, cost = b + sh;
   $("#calc-out").innerHTML = 'Marge nette : <span style="color:' + (net >= 0 ? "var(--good)" : "var(--crit)") + '">' + eur(net) + '</span> (' + (cost ? pct(net / cost * 100) : "—") + ' du coût) · Seuil de rentabilité : ' + eur((b + sh) / (1 - f));
 }
-function applyObs(){
-  var nums = parseNums($("#obs").value), msg = $("#obs-msg");
-  if (nums.length < 3){ msg.innerHTML = '<span class="err">Il faut au moins 3 prix pour recalculer la cote.</span>'; return; }
-  var w = current, copy = JSON.parse(JSON.stringify(w));
-  copy._orig = w._orig || w; copy._origOrigin = w._origOrigin || currentOrigin;
-  copy.mk = quantile(nums, 0.5); copy.low = quantile(nums, 0.25); copy.high = quantile(nums, 0.75); copy.mkLive = false;
-  copy.anchor = Object.assign({}, copy.anchor, {basis:nums.length + " relevés saisis. Des prix demandés surestiment souvent de 5 à 15 % les prix de vente réels"});
-  copy.override = nums.length;
-  render(copy, currentOrigin);
+function c24Section(w, origin){
+  var db = origin === "db";
+  var query = db ? shortRef(w) : [w.brand, w.ref].filter(Boolean).join(" ");
+  var rels = db ? C24.list(w.id) : [];
+  var rows = rels.slice().reverse().map(function(r, i, arr){
+    var prev = arr[i + 1], d = prev ? (r.median - prev.median) / prev.median * 100 : null;
+    return '<tr><td>' + esc(dlong(r.date)) + '</td><td class="num">' + r.n + (r.total ? ' sur ' + r.total.toLocaleString("fr-FR") : '') + '</td><td class="num">' + eur(r.median) + '</td><td class="num">' + eur(r.q1) + ' – ' + eur(r.q3) + '</td><td class="num">' + (d == null ? "—" : pct(d)) + '</td></tr>';
+  }).join("");
+  return '<section class="plate" aria-labelledby="c24-title"><p class="label" id="c24-title">' + (db ? 'Relevé Chrono24' : 'Recalculer avec des prix Chrono24') + '</p>' +
+    '<ol class="small" style="margin:0 0 8px;padding-left:18px">' +
+      '<li><a href="' + esc(C24.searchUrl(query)) + '" target="_blank" rel="noopener">Ouvrir la recherche « ' + esc(query) + ' » sur Chrono24</a>. Filtrez l\'état ou la boîte et les papiers si vous le souhaitez.</li>' +
+      '<li>Sur la page de résultats, tout sélectionner puis copier : Ctrl+A puis Ctrl+C (Cmd sur Mac ; sur téléphone, appui long sur le texte, « Tout sélectionner », « Copier »).</li>' +
+      '<li>Coller ci-dessous, puis ' + (db ? '« Enregistrer le relevé »' : '« Recalculer »') + '. Une simple liste de prix fonctionne aussi.</li></ol>' +
+    '<div class="field"><label for="c24-text">Page de résultats Chrono24 copiée</label><textarea id="c24-text" placeholder="Collez ici la page de résultats…"></textarea></div>' +
+    '<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"><button type="button" id="c24-save">' + (db ? 'Enregistrer le relevé' : 'Recalculer') + '</button>' +
+      (rels.length ? '<button type="button" class="ghost" id="c24-undo">Supprimer le dernier relevé</button>' : '') + '</div>' +
+    '<p id="c24-msg" class="small" style="margin:6px 0 0"></p>' +
+    (rows ? '<table style="margin-top:10px"><thead><tr><th>Relevé</th><th class="num">Prix retenus</th><th class="num">Médiane demandée</th><th class="num">Fourchette</th><th class="num">Écart</th></tr></thead><tbody>' + rows + '</tbody></table>' : '') +
+    '<p class="small muted" style="margin:8px 0 0">Le site écarte les frais de port, les filtres de prix et les prix sans rapport (bracelets, versions en or…), puis applique une décote de 8 % : un prix demandé surestime le prix de vente. ' +
+      (db ? 'La cote se rapproche du relevé selon le nombre de prix (60 % au plus), à plein pendant 14 jours, puis de moins en moins jusqu\'à 60 jours. Les relevés restent dans ce navigateur : ils n\'apparaissent pas sur vos autres appareils.' : 'Pour une montre non suivie, le calcul vaut pour cette visite seulement.') + '</p></section>';
+}
+function saveC24(){
+  var msg = $("#c24-msg"), w = current;
+  var r = C24.parsePasted($("#c24-text").value, {anchor:w.mkBase || null, usdRate:usdRate()});
+  if (r.prices.length < 3){
+    msg.innerHTML = '<span class="err">' + (r.prices.length ? 'Seulement ' + r.prices.length + ' prix exploitable' + (r.prices.length > 1 ? 's' : '') : 'Aucun prix trouvé') + ' : il en faut au moins 3. Copiez toute la page de résultats (Ctrl+A, puis Ctrl+C).</span> ' + esc(droppedText(r.dropped));
+    return;
+  }
+  var rel = C24.summarize(r.prices, r.total);
+  if (currentOrigin === "db"){
+    var stored = C24.save(w.id, rel);
+    var ref = REFS.filter(function(x){ return x.id === w.id; })[0];
+    var nw = effective(ref);
+    flash = '<span class="ok-text">Relevé enregistré : ' + rel.n + ' prix retenus, médiane demandée ' + eur(rel.median) + '. Cote ' + eur(nw.mkBase) + ' → ' + eur(nw.mk) + ' (poids ' + Math.round(nw.c24w * 100) + ' %).</span> ' + esc(droppedText(r.dropped)) +
+      (stored ? '' : ' <span class="err">Ce navigateur ne permet pas de conserver le relevé : il sera perdu à la fermeture de la page.</span>');
+    render(nw, "db");
+  } else {
+    var copy = JSON.parse(JSON.stringify(w)), k = 1 - C24.ASK_DISCOUNT;
+    copy.mk = rel.median * k; copy.low = rel.q1 * k; copy.high = rel.q3 * k;
+    copy.anchor = {basis:rel.n + " prix Chrono24 relevés, décote de 8 %"};
+    flash = '<span class="ok-text">' + rel.n + ' prix retenus, médiane demandée ' + eur(rel.median) + '.</span> ' + esc(droppedText(r.dropped));
+    render(copy, currentOrigin);
+  }
+}
+function undoC24(){
+  if (currentOrigin !== "db") return;
+  C24.removeLast(current.id);
+  var ref = REFS.filter(function(x){ return x.id === current.id; })[0];
+  flash = "Dernier relevé supprimé.";
+  render(effective(ref), "db");
 }
 
 /* ---------- Référence non suivie ---------- */
@@ -458,19 +524,21 @@ function showNotFound(q){
       '<div class="field"><label for="m-trend">Tendance 12 mois (%)</label><input id="m-trend" type="number" step="0.1"></div>' +
       '<div class="field"><label for="m-fake">Risque de contrefaçon</label><select id="m-fake"><option value="faible">Faible</option><option value="moyen" selected>Moyen</option><option value="eleve">Élevé</option></select></div>' +
       '<div class="field"><label for="m-svc">Coût de révision (€)</label><input id="m-svc" type="number"></div></div>' +
-      '<div class="field" style="margin-top:8px"><label for="m-prices">Prix relevés (€, 3 minimum)</label><textarea id="m-prices" placeholder="1450 1500 1620 1700"></textarea></div>' +
+      '<div class="field" style="margin-top:8px"><label for="m-prices">Prix relevés : page Chrono24 copiée ou liste de prix (3 minimum)</label><textarea id="m-prices" placeholder="Collez la page de résultats Chrono24, ou 1450 1500 1620 1700"></textarea></div>' +
+      '<p class="small" style="margin:4px 0 0"><a href="' + esc(C24.searchUrl(label)) + '" target="_blank" rel="noopener">Ouvrir la recherche Chrono24</a>, puis Ctrl+A, Ctrl+C et coller ici.</p>' +
       '<button type="submit" style="margin-top:8px">Analyser avec mes données</button><p id="man-msg" class="small" style="margin:6px 0 0"></p></form></div>';
   $("#result").innerHTML = "";
   $("#man-form").addEventListener("submit", function(e){ e.preventDefault(); runManual(q); });
 }
 function runManual(q){
-  var nums = parseNums($("#m-prices").value);
-  if (nums.length < 3){ $("#man-msg").innerHTML = '<span class="err">Saisissez au moins 3 prix relevés.</span>'; return; }
+  var parsed = C24.parsePasted($("#m-prices").value, {usdRate:usdRate()}), nums = parsed.prices;
+  if (nums.length < 3){ $("#man-msg").innerHTML = '<span class="err">Il faut au moins 3 prix exploitables.</span> ' + esc(droppedText(parsed.dropped)); return; }
+  var k = 1 - C24.ASK_DISCOUNT;
   var num = function(id){ var v = parseFloat($(id).value); return isNaN(v) ? null : v; };
   var svc = num("#m-svc"), retail = num("#m-retail");
   var w = { id:"manual", brand:q.brand || "", model:q.model || "", ref:q.ref || "Référence saisie", status:"Données saisies", years:"", specs:{},
     retail:{eur:retail, label:retail ? eur(retail) + " (saisi)" : null},
-    anchor:{basis:nums.length + " relevés saisis"}, mk:quantile(nums, 0.5), low:quantile(nums, 0.25), high:quantile(nums, 0.75), mkLive:false,
+    anchor:{basis:nums.length + " prix relevés, décote de 8 %"}, mk:quantile(nums, 0.5) * k, low:quantile(nums, 0.25) * k, high:quantile(nums, 0.75) * k, mkLive:false,
     days:{v:num("#m-days"), live:false}, trend:{v:num("#m-trend"), live:false}, vol:{v:null, live:false}, trend30:null,
     offer:null, hype:null, fake:$("#m-fake").value, service:svc != null ? {interval:"Non renseigné", low:svc, high:svc} : null,
     warranty:"", naked:0.12, auth:[], pitfalls:[], generations:[], sources:[], live:null };
@@ -513,7 +581,7 @@ function refresh(){
   var before = MARKET.updatedAt;
   loadAll().then(function(){
     header();
-    if (MARKET.updatedAt !== before && current && currentOrigin === "db" && !current.override){
+    if (MARKET.updatedAt !== before && current && currentOrigin === "db"){
       var r = REFS.filter(function(x){ return x.id === current.id; })[0];
       if (r) render(effective(r), "db");
       buildChips();
