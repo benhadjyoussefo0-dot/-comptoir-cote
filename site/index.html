@@ -157,7 +157,12 @@ footer{color:var(--mute);font-size:12.5px;display:grid;gap:6px}
 <script>
 (function(){
 "use strict";
-var REPO = "benhadjyoussefo0-dot/comptoir-cote";
+// Dépôt GitHub déduit de l'adresse du site (compte.github.io/nom-du-dépôt/), pour suivre un éventuel renommage.
+var REPO = (function () {
+  var host = location.hostname.match(/^([^.]+)\.github\.io$/i);
+  var seg = location.pathname.split("/").filter(Boolean)[0];
+  return host && seg ? host[1] + "/" + seg : "benhadjyoussefo0-dot/-comptoir-cote";
+})();
 var FEE = 0.065;
 var REFRESH_MS = 10 * 60 * 1000;
 var REFS = [], MARKET = {refs:{}, sources:{}}, HISTORY = {};

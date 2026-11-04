@@ -2,7 +2,7 @@
 
 Cote de revente, demande, offre, hype et indice de risque de montres d'occasion (Tudor, IWC, Seiko), **mis à jour automatiquement toutes les 6 heures** par GitHub Actions.
 
-**Site :** https://benhadjyoussefo0-dot.github.io/comptoir-cote/
+**Site :** https://benhadjyoussefo0-dot.github.io/-comptoir-cote/ (l'adresse suit le nom du dépôt : s'il est renommé, elle change aussi)
 
 On tape une marque, un modèle ou une référence, et le site affiche :
 
