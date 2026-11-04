@@ -44,6 +44,7 @@ Phase 0, réalisée le 4 novembre 2026 sur la branche `refonte/phase-0` (commit 
 3. **Des indicateurs reposent sur des jugements, pas sur des données** (prix par état, hype, part de la demande, contrefaçon, révision). Ils sont présentés comme des mesures. Il faut les signaler, puis les remplacer par des définitions mesurables (chantier A, étape 7).
 
 ### Élevé
+0. **L'ajout d'une référence demandait des prix à l'IA** (cote, fourchette, prix neuf, délai, tendance, hype) : ce sont des chiffres non sourcés. **Corrigé sur cette branche** : l'IA ne fournit plus que l'identification et les caractéristiques ; la cote d'une nouvelle référence vient d'un prix saisi par une personne ou des premières annonces.
 4. **Couverture : 10 références** pour un objectif de 300.
 5. **Pas de référentiel** : chaque fiche porte ses propres mots-clés de correspondance ; pas d'alias normalisés, d'équivalents régionaux ni de surnoms, pas de score de confiance.
 6. **Aucun seuil d'échantillon** : le site affiche toujours une cote, même sans annonce. Il doit afficher « données insuffisantes » sous un seuil documenté.

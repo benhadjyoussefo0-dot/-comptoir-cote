@@ -3,6 +3,11 @@
   "id": "tudor-79030n",
   "brand": "Tudor",
   "model": "Black Bay Fifty-Eight",
+  "collection": "Black Bay",
+  "nicknames": [
+   "BB58"
+  ],
+  "equivalents": [],
   "ref": "M79030N-0001",
   "aliases": [
    "79030n",
@@ -106,6 +111,11 @@
   "id": "tudor-bb58-2026",
   "brand": "Tudor",
   "model": "Black Bay 58 (2026, METAS)",
+  "collection": "Black Bay",
+  "nicknames": [
+   "BB58 METAS"
+  ],
+  "equivalents": [],
   "ref": "M7939A1A0NU-0001",
   "aliases": [
    "7939a1a0nu",
@@ -200,6 +210,11 @@
   "id": "tudor-79000n",
   "brand": "Tudor",
   "model": "Black Bay 54",
+  "collection": "Black Bay",
+  "nicknames": [
+   "BB54"
+  ],
+  "equivalents": [],
   "ref": "M79000N-0001",
   "aliases": [
    "79000n",
@@ -288,6 +303,11 @@
   "id": "tudor-25407n",
   "brand": "Tudor",
   "model": "Pelagos 39",
+  "collection": "Pelagos",
+  "nicknames": [
+   "Pelagos 39"
+  ],
+  "equivalents": [],
   "ref": "M25407N-0001",
   "aliases": [
    "25407n",
@@ -382,6 +402,12 @@
   "id": "tudor-79830rb",
   "brand": "Tudor",
   "model": "Black Bay GMT",
+  "collection": "Black Bay",
+  "nicknames": [
+   "BB GMT",
+   "Pepsi"
+  ],
+  "equivalents": [],
   "ref": "M79830RB-0001",
   "aliases": [
    "79830rb",
@@ -474,6 +500,11 @@
   "id": "iwc-iw328201",
   "brand": "IWC",
   "model": "Pilot's Watch Mark XX",
+  "collection": "Pilot's Watch",
+  "nicknames": [
+   "Mark XX"
+  ],
+  "equivalents": [],
   "ref": "IW328201",
   "aliases": [
    "iw328201",
@@ -569,6 +600,13 @@
   "id": "iwc-pilot-chrono-41",
   "brand": "IWC",
   "model": "Pilot's Watch Chronograph 41",
+  "collection": "Pilot's Watch",
+  "nicknames": [
+   "Pilot Chrono 41"
+  ],
+  "equivalents": [
+   "IW388102"
+  ],
   "ref": "IW388101 / IW388102",
   "aliases": [
    "iw388101",
@@ -658,6 +696,13 @@
   "id": "seiko-spb143",
   "brand": "Seiko",
   "model": "Prospex 62MAS (réédition)",
+  "collection": "Prospex",
+  "nicknames": [
+   "62MAS"
+  ],
+  "equivalents": [
+   "SBDC101"
+  ],
   "ref": "SPB143J1",
   "aliases": [
    "spb143",
@@ -743,6 +788,11 @@
   "id": "seiko-sla021",
   "brand": "Seiko",
   "model": "Prospex Marinemaster 300",
+  "collection": "Prospex",
+  "nicknames": [
+   "Marinemaster 300"
+  ],
+  "equivalents": [],
   "ref": "SLA021J1",
   "aliases": [
    "sla021",
@@ -834,6 +884,11 @@
   "id": "seiko-sje083",
   "brand": "Seiko",
   "model": "King Seiko KSK (140e anniversaire)",
+  "collection": "King Seiko",
+  "nicknames": [
+   "KSK"
+  ],
+  "equivalents": [],
   "ref": "SJE083J1",
   "aliases": [
    "sje083",
