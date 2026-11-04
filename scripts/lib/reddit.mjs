@@ -1,5 +1,6 @@
 // Source Reddit : r/Watchexchange (annonces [WTS] = offre, [WTB] = demande).
-// Application « script » gratuite sur reddit.com/prefs/apps : REDDIT_CLIENT_ID et REDDIT_CLIENT_SECRET.
+// Nécessite une application Reddit « script » déjà approuvée (REDDIT_CLIENT_ID, REDDIT_CLIENT_SECRET).
+// Reddit n'accepte plus de nouvelles demandes depuis le 31/10/2026 et ferme l'accès public en mars 2027.
 import { extractPrice, postKind } from "./text.mjs";
 import { toEur } from "./ebay.mjs";
 
@@ -48,7 +49,7 @@ export async function searchReddit(fetchImpl, token, userAgent, query, rates) {
 
 export async function collectReddit(fetchImpl, env, refs, rates, log = console) {
   if (!env.REDDIT_CLIENT_ID || !env.REDDIT_CLIENT_SECRET) {
-    return { status: "non configurée", message: "Ajoutez REDDIT_CLIENT_ID et REDDIT_CLIENT_SECRET dans les secrets du dépôt.", byRef: {} };
+    return { status: "non configurée", message: "Pas de clé Reddit : Reddit n'ouvre plus de nouveaux accès à son API depuis le 31/10/2026.", byRef: {} };
   }
   const ua = env.REDDIT_USER_AGENT || "comptoir-cote:v1.0 (GitHub Actions)";
   const token = await getRedditToken(fetchImpl, env.REDDIT_CLIENT_ID, env.REDDIT_CLIENT_SECRET, ua);

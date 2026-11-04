@@ -51,16 +51,16 @@ Dépôt → **Settings** → **Pages** → **Source : GitHub Actions**.
    - `EBAY_CLIENT_ID` : l'App ID (Client ID) ;
    - `EBAY_CLIENT_SECRET` : le Cert ID (Client Secret).
 
-### 3. Clés Reddit (gratuites, usage personnel)
+### 3. Clés Reddit (uniquement si vous en avez déjà)
 
-1. Connecté à Reddit, ouvrez [reddit.com/prefs/apps](https://www.reddit.com/prefs/apps) → **create another app**.
-2. Choisissez le type **script**. Pour la redirect URI, mettez `http://localhost:8080`.
-3. Ajoutez les secrets :
+Reddit n'accepte plus de nouvelles demandes d'accès à son API depuis le 31 octobre 2026, et coupe l'accès public restant en mars 2027. Sans clé, la source Reddit reste vide et le site s'appuie sur eBay et sur l'étude.
+
+Si vous disposez déjà d'une application Reddit approuvée de type **script** :
+
+1. Ajoutez les secrets :
    - `REDDIT_CLIENT_ID` : la chaîne sous le nom de l'application ;
    - `REDDIT_CLIENT_SECRET` : le « secret ».
-4. Facultatif : ajoutez une **variable** (pas un secret) `REDDIT_USER_AGENT`, par exemple `comptoir-cote:v1.0 (by /u/votre_pseudo)`.
-
-Reddit peut vous demander d'accepter les conditions de son API.
+2. Facultatif : ajoutez une **variable** (pas un secret) `REDDIT_USER_AGENT`, par exemple `comptoir-cote:v1.0 (by /u/votre_pseudo)`.
 
 ### 4. Facultatif : clé Claude
 
