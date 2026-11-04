@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Direction C — Instrument</title>
+<style>
+@font-face{font-family:"Chivo";src:url(../../fonts/chivo.woff2) format("woff2");font-weight:100 900;font-display:swap}
+@font-face{font-family:"Chivo Mono";src:url(../../fonts/chivo-mono.woff2) format("woff2");font-weight:100 900;font-display:swap}
+:root{
+  --bg:#131517; --ink:#E6E8EA; --mute:#8E969D; --rule:#30353A; --hair:#23272B; --signal:#E3BF4A;
+  --sans:"Chivo",sans-serif; --mono:"Chivo Mono",monospace;
+}
+*{box-sizing:border-box}
+html{background:var(--bg);color:var(--ink)}
+body{margin:0;font-family:var(--sans);font-size:15px;line-height:1.5;font-variant-numeric:tabular-nums}
+a{color:var(--ink);text-underline-offset:3px}
+.wrap{max-width:1440px;margin:0 auto;padding:0 40px}
+.mono{font-family:var(--mono)}
+.lab{font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--mute);text-transform:lowercase}
+.mute{color:var(--mute)}
+header{display:grid;grid-template-columns:240px 1fr auto;gap:32px;align-items:center;height:76px;border-bottom:1px solid var(--rule)}
+nav a{font-family:var(--mono);font-size:12.5px;margin-left:22px;text-decoration:none;color:var(--mute)}
+nav a[aria-current]{color:var(--ink)}
+.q{position:relative}
+.q input{width:100%;font:inherit;font-family:var(--mono);font-size:15px;background:transparent;border:1px solid var(--rule);color:var(--ink);padding:11px 14px;outline:none}
+.q input:focus-visible{border-color:var(--signal)}
+.ac{position:absolute;left:0;right:0;top:100%;background:#1A1D20;border:1px solid var(--rule);border-top:0;z-index:5}
+.ac .row{display:grid;grid-template-columns:110px 1fr auto;padding:9px 14px;border-top:1px solid var(--hair);font-size:14px}
+.ac .row[aria-selected]{background:var(--ink);color:var(--bg)}
+.ac .row[aria-selected] .lab{color:#3A4046}
+/* Règle graduée (élément signature) */
+.scale{position:relative;height:30px}
+.scale .tk{position:absolute;bottom:8px;width:1px;background:var(--mute)}
+.scale .base{position:absolute;left:0;right:0;bottom:8px;border-top:1px solid var(--rule)}
+.scale .ptr{position:absolute;bottom:0;width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:7px solid var(--signal);transform:translateX(-5px)}
+.scale .band{position:absolute;bottom:8px;height:3px;background:var(--ink)}
+/* Panneau de réglages */
+.rack{display:grid;grid-template-columns:2fr 3fr 2fr 2fr;border-bottom:1px solid var(--rule)}
+.rack > div{padding:16px 20px 18px;border-right:1px solid var(--rule)}
+.rack > div:first-child{padding-left:0}
+.rack > div:last-child{border-right:0}
+.seg{display:flex;flex-wrap:wrap;margin-top:10px}
+.seg span{font-family:var(--mono);font-size:12.5px;border:1px solid var(--rule);margin:0 -1px -1px 0;padding:5px 10px}
+.seg span.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.seg span i{font-style:normal;color:var(--mute);margin-left:6px}
+.seg span.on i{color:#4A5157}
+.hist{display:flex;align-items:flex-end;gap:2px;height:36px;margin-top:10px}
+.hist span{flex:1;background:var(--mute)}
+.hist span.in{background:var(--ink)}
+.vals{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12.5px}
+.status{display:flex;justify-content:space-between;align-items:baseline;padding:14px 0;border-bottom:1px solid var(--rule)}
+.status .n{font-family:var(--mono);font-size:22px}
+.chips{display:flex;gap:8px}
+.chips span{font-family:var(--mono);font-size:12px;border-bottom:1px solid var(--signal);padding-bottom:1px}
+/* Grille de lectures */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);border-left:1px solid var(--rule)}
+.cell{border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:18px 20px 16px}
+.cell .ref{font-family:var(--mono);font-size:13px}
+.cell h3{margin:2px 0 0;font-size:16px;font-weight:500}
+.cell .v{font-family:var(--mono);font-size:38px;font-weight:400;letter-spacing:-.03em;margin:14px 0 2px;line-height:1}
+.cell .v small{font-size:.5em;color:var(--mute);margin-left:4px}
+.cell .stats{display:grid;grid-template-columns:repeat(3,1fr);margin-top:10px;font-family:var(--mono);font-size:12.5px}
+.cell .stats b{display:block;font-weight:400;color:var(--ink);font-size:14px}
+.foot{font-family:var(--mono);font-size:12px;color:var(--mute);padding:16px 0}
+/* Fiche */
+.fh{display:grid;grid-template-columns:repeat(12,1fr);gap:24px;padding:36px 0 0}
+.fh .id{grid-column:1 / span 8}
+.fh .id h1{margin:4px 0 0;font-size:40px;font-weight:400;letter-spacing:-.01em;line-height:1.05}
+.fh .id .ref{font-family:var(--mono);font-size:15px;margin-top:8px}
+.readout{display:grid;grid-template-columns:repeat(12,1fr);gap:24px;margin-top:36px;border-top:1px solid var(--rule);padding-top:24px}
+.readout .main{grid-column:1 / span 8}
+.readout .big{font-family:var(--mono);font-size:120px;line-height:.9;letter-spacing:-.05em}
+.readout .big small{font-size:.32em;letter-spacing:0;color:var(--mute);margin-left:12px}
+.readout .scale{height:46px;margin-top:30px}
+.readout .scale .lbl{position:absolute;bottom:-18px;font-family:var(--mono);font-size:11px;color:var(--mute);transform:translateX(-50%)}
+.readout .side{grid-column:9 / span 4}
+.meas{display:grid;grid-template-columns:1fr auto;font-size:14px}
+.meas div{padding:9px 0;border-bottom:1px solid var(--hair)}
+.meas div:nth-child(even){font-family:var(--mono);text-align:right}
+.flag{margin-top:16px;padding:10px 12px;border:1px solid var(--signal);font-size:13.5px}
+.flag b{color:var(--signal);font-family:var(--mono);font-weight:500;margin-right:6px}
+.two{display:grid;grid-template-columns:repeat(12,1fr);gap:24px;margin-top:56px}
+.two > section{border-top:1px solid var(--rule);padding-top:12px}
+.s1{grid-column:1 / span 6}.s2{grid-column:8 / span 5}
+.out{display:inline-block;margin-top:20px;font-family:var(--mono);font-size:13px;border:1px solid var(--ink);padding:8px 12px;text-decoration:none}
+footer{margin-top:64px;border-top:1px solid var(--rule);padding:16px 0 32px;font-family:var(--mono);font-size:11.5px;color:var(--mute)}
+.mbtn{display:none}
+@media (max-width:720px){
+  .wrap{padding:0 18px}
+  header{grid-template-columns:1fr;height:auto;gap:12px;padding:16px 0}
+  nav{display:none}
+  .ac{display:none}
+  .rack{display:none}
+  .status{flex-direction:column;gap:8px}
+  .chips{flex-wrap:wrap}
+  .grid{grid-template-columns:1fr;border-left:0}
+  .cell{border-right:0;padding:16px 0}
+  .fh .id,.readout .main,.readout .side,.s1,.s2{grid-column:1 / -1}
+  .fh,.readout,.two{grid-template-columns:1fr}
+  .fh .id h1{font-size:28px}
+  .readout .big{font-size:64px}
+  .readout .side{margin-top:40px}
+  .mbtn{display:block;position:fixed;left:18px;right:18px;bottom:16px;background:var(--signal);color:#131517;text-align:center;padding:14px;font-family:var(--mono);font-size:14px;font-weight:600;text-decoration:none}
+  body.sheet .rack{display:block;position:fixed;inset:0;background:var(--bg);z-index:9;padding:18px 18px 90px;overflow:auto}
+  body.sheet .rack > div{border-right:0;border-bottom:1px solid var(--rule);padding:16px 0}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <svg width="220" height="40" viewBox="0 0 220 40" role="img" aria-label="Comptoir de cote">
+      <text x="0" y="16" font-family="Chivo Mono" font-size="15" font-weight="500" letter-spacing="-.2" fill="#E6E8EA">comptoir/cote</text>
+      <path d="M0 29h133" stroke="#30353A"/>
+      <path d="M0 25v8M13.3 27v4M26.6 27v4M39.9 27v4M53.2 27v4M66.5 25v8M79.8 27v4M93.1 27v4M106.4 27v4M119.7 27v4M133 25v8" stroke="#8E969D"/>
+      <path d="M86 40l4-6 4 6z" fill="#E3BF4A"/>
+    </svg>
+    <div class="q"><label class="lab" for="q" style="position:absolute;left:-9999px">Recherche</label><input id="q" value="" placeholder="référence, modèle ou surnom — ex. 79030N, alpinist">
+    </div>
+    <nav><a href="#" aria-current="page">recherche</a><a href="#">marques</a><a href="#">méthode</a></nav>
+  </header>
+  <main id="app"></main>
+  <footer>Estimation indicative, ni expertise, ni offre de rachat, ni conseil en investissement · site indépendant de Chrono24 et des marques citées · méthode v0.3 · données du 01/11/2026</footer>
+</div>
+<a class="mbtn" href="#" id="mbtn"></a>
+<script src="../data.js"></script>
+<script src="../common.js"></script>
+<script>
+(function(){
+var U = UI, D = DATA, app = document.getElementById("app");
+var MIN = 0, MAX = 5000;
+function scale(lo, hi, cote, low, high, n, labels){
+  var s = function(v){ return (v - lo) / (hi - lo) * 100; }, out = '<div class="scale"><span class="base"></span>';
+  for (var i = 0; i <= n; i++){ var x = i / n * 100, major = i % 5 === 0; out += '<span class="tk" style="left:' + x + '%;height:' + (major ? 12 : 6) + 'px"></span>';
+    if (labels && major) out += '<span class="lbl" style="left:' + x + '%">' + U.num(lo + (hi - lo) * i / n) + '</span>'; }
+  if (low != null) out += '<span class="band" style="left:' + s(low) + '%;right:' + (100 - s(high)) + '%"></span>';
+  return out + '<span class="ptr" style="left:' + s(cote) + '%"></span></div>';
+}
+function recherche(){
+  var rows = U.filtered(), bc = U.counts("brand"), h = U.hist(25, MIN, MAX);
+  if (U.flag("ac")) {
+    document.querySelector(".q").insertAdjacentHTML("beforeend", '<div class="ac" role="listbox"><div class="row" aria-selected="true"><span class="lab">modèle</span><span>Tudor Black Bay Fifty-Eight</span><span class="mono">M79030N</span></div><div class="row"><span class="lab">modèle</span><span>Tudor Black Bay 58 (2026, METAS)</span><span class="mono">M7939A1A0NU</span></div><div class="row"><span class="lab">surnom</span><span>« BB58 »</span><span class="mono">2 réf.</span></div></div>');
+    document.getElementById("q").value = "bb58";
+  }
+  app.innerHTML = '<div class="rack" aria-label="Filtres">' +
+      '<div><span class="lab">marque</span><div class="seg">' + Object.keys(bc).map(function(b){ return '<span class="' + (U.demo.brands.indexOf(b) >= 0 ? "on" : "") + '">' + b + '<i>' + bc[b] + '</i></span>'; }).join("") + '</div></div>' +
+      '<div><span class="lab">cote · 1 400 – 4 000 €</span><div class="hist" aria-hidden="true">' + h.map(function(n, i){ var a = i * 200; return '<span class="' + (a >= U.demo.lo && a < U.demo.hi ? "in" : "") + '" style="height:' + (n ? 8 + n * 12 : 1) + 'px"></span>'; }).join("") + '</div>' + scale(MIN, MAX, U.demo.lo, U.demo.lo, U.demo.hi, 25) + '<div class="vals"><span>0</span><span>5 000 €</span></div></div>' +
+      '<div><span class="lab">risque de revente</span><div class="seg"><span>faible<i>2</i></span><span>modéré<i>5</i></span><span>élevé<i>3</i></span></div><span class="lab" style="display:block;margin-top:14px">production</span><div class="seg"><span>en cours<i>7</i></span><span>arrêtée<i>2</i></span></div></div>' +
+      '<div><span class="lab">trier par</span><div class="seg"><span class="on">cote ↓</span><span>cote ↑</span><span>12 mois</span><span>risque</span></div><span class="lab" style="display:block;margin-top:14px">affichage</span><div class="seg"><span class="on">lectures</span><span>tableau</span></div></div>' +
+    '</div>' +
+    '<div class="status"><span><span class="n" aria-live="polite">' + rows.length + '</span> <span class="mute">références sur ' + D.length + '</span></span><span class="chips"><span>tudor ×</span><span>iwc ×</span><span>1 400 – 4 000 € ×</span><a href="#" class="lab">tout effacer</a></span></div>' +
+    '<div class="grid">' + rows.map(function(r){
+      return '<article class="cell"><div class="ref">' + U.esc(r.ref) + '</div><h3>' + U.esc(r.brand + " " + r.model) + '</h3>' +
+        '<div class="v">' + U.num(r.cote) + '<small>€</small></div>' + scale(r.cote * 0.75, r.cote * 1.25, r.cote, r.low, r.high, 20) +
+        '<div class="stats"><span class="lab">12 mois<b>' + (r.trend12 == null ? "—" : U.arrow(r.trend12) + " " + U.pct(r.trend12)) + '</b></span><span class="lab">risque<b>' + r.risk + '</b></span><span class="lab">confiance<b>faible</b></span></div></article>';
+    }).join("") + '</div><p class="foot">maquette · cotes de l\'étude du ' + DATA_DATE + ' · aucune annonce analysée</p>';
+  document.getElementById("mbtn").textContent = "réglages · " + rows.length + " résultats";
+  if (U.flag("sheet")) document.body.classList.add("sheet");
+}
+function fiche(){
+  var r = D.filter(function(x){ return x.id === "tudor-79030n"; })[0];
+  var st = U.states(r).map(function(x, i){ return '<div' + (i === 1 ? ' style="color:var(--ink);font-weight:600"' : '') + '>' + x[0] + '</div><div>' + U.eur(x[1]) + '</div>'; }).join("");
+  app.innerHTML = '<section class="fh"><div class="id"><span class="lab">' + U.esc(r.brand.toLowerCase()) + ' · ' + U.esc(U.prod(r.prod).toLowerCase()) + ' · ' + U.esc(r.years) + '</span><h1>' + U.esc(r.model) + '</h1><div class="ref">' + U.esc(r.ref) + '</div></div></section>' +
+    '<section class="readout"><div class="main"><span class="lab">cote · excellent état, boîte et papiers</span><div class="big">' + U.num(r.cote) + '<small>€</small></div>' + scale(2000, 3000, r.cote, r.low, r.high, 20, true) + '</div>' +
+      '<div class="side"><div class="meas"><div>Fourchette</div><div>' + U.num(r.low) + ' – ' + U.eur(r.high) + '</div><div>Type de prix</div><div>demandé</div><div>Échantillon</div><div>0</div><div>Délai de revente</div><div>' + String(r.days).replace(".", ",") + ' j</div><div>Tendance 12 mois</div><div>' + U.pct(r.trend12) + '</div><div>Risque</div><div>' + r.risk + ' / 100</div></div>' +
+      '<p class="flag"><b>confiance faible</b>cote de l\'étude du ' + DATA_DATE + ', pas encore confirmée par des annonces.</p></div></section>' +
+    '<section class="two"><section class="s1"><span class="lab">prix selon l\'état</span><div class="meas" style="margin-top:6px">' + st + '</div><a class="out" href="' + U.chrono24(r) + '">voir les annonces sur chrono24 ↗</a></section>' +
+      '<section class="s2"><span class="lab">fiche</span><div class="meas" style="margin-top:6px"><div>Calibre</div><div>' + U.esc(r.calibre) + '</div><div>Diamètre</div><div>' + String(r.diam).replace(".", ",") + ' mm</div><div>Matière</div><div>' + U.esc(r.mat) + '</div></div></section></section>';
+  document.getElementById("mbtn").style.display = "none";
+}
+(U.page === "fiche" ? fiche : recherche)();
+})();
+</script>
+</body>
+</html>

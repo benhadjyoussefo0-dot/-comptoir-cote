@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Direction B — Catalogue</title>
+<style>
+@font-face{font-family:"Newsreader";src:url(../../fonts/newsreader-opsz.woff2) format("woff2");font-weight:200 800;font-display:swap}
+@font-face{font-family:"Newsreader";src:url(../../fonts/newsreader-opsz-italic.woff2) format("woff2");font-weight:200 800;font-style:italic;font-display:swap}
+@font-face{font-family:"Schibsted Grotesk";src:url(../../fonts/schibsted-grotesk.woff2) format("woff2");font-weight:400 900;font-display:swap}
+:root{
+  --paper:#FFFFFF; --ink:#161514; --mute:#625E58; --rule:#CFCBC4; --hair:#E6E3DE; --accent:#8A1C2C;
+  --serif:"Newsreader",serif; --sans:"Schibsted Grotesk",sans-serif;
+}
+*{box-sizing:border-box}
+html{background:var(--paper);color:var(--ink)}
+body{margin:0;font-family:var(--serif);font-size:18px;line-height:1.5;font-variant-numeric:lining-nums tabular-nums;font-optical-sizing:auto}
+a{color:var(--accent);text-underline-offset:3px;text-decoration-thickness:1px}
+.wrap{max-width:1440px;margin:0 auto;padding:0 64px}
+.sans{font-family:var(--sans)}
+.sc{font-family:var(--sans);font-size:11.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase}
+.mute{color:var(--mute)}
+.dbl{border:0;border-top:1px solid var(--ink);height:4px;border-bottom:1px solid var(--ink);margin:0}
+/* Bandeau */
+.mast{display:grid;grid-template-columns:1fr auto;align-items:end;padding:28px 0 14px}
+.mast .name{font-size:30px;font-weight:500;letter-spacing:-.01em;line-height:1}
+.mast .name i{font-weight:400}
+.mast nav a{font-family:var(--sans);font-size:14px;color:var(--ink);text-decoration:none;margin-left:28px}
+.mast nav a[aria-current]{text-decoration:underline}
+.issue{display:flex;justify-content:space-between;padding:8px 0}
+/* Recherche */
+.lead{display:grid;grid-template-columns:3fr 9fr;gap:24px;padding:48px 0 0}
+.lead h1{margin:0;font-size:56px;font-weight:400;line-height:1.02;letter-spacing:-.02em}
+.lead h1 i{color:var(--mute)}
+.q{position:relative;margin-top:18px}
+.q input{width:100%;font:inherit;font-size:24px;border:0;border-bottom:1px solid var(--ink);padding:8px 0;background:transparent;outline:none;color:var(--ink)}
+.q input:focus-visible{border-bottom-color:var(--accent);box-shadow:0 1px 0 var(--accent)}
+.ac{position:absolute;left:0;right:30%;top:100%;background:var(--paper);border:1px solid var(--ink);border-top:0;z-index:4;padding:6px 0}
+.ac p{margin:10px 18px 4px}
+.ac div{padding:6px 18px;font-size:17px}
+.ac div[aria-selected]{background:var(--ink);color:var(--paper)}
+.ac em{font-style:normal;font-family:var(--sans);font-size:12px;color:var(--mute);float:right;margin-top:3px}
+.ac div[aria-selected] em{color:#BDB8B0}
+/* Filtres en bandeau */
+.fbar{display:flex;flex-wrap:wrap;gap:0;margin-top:40px;border-top:1px solid var(--ink);border-bottom:1px solid var(--rule)}
+.fbar button{font:inherit;font-family:var(--sans);font-size:14px;background:none;border:0;border-right:1px solid var(--hair);padding:12px 20px;cursor:pointer;color:var(--ink)}
+.fbar button[aria-expanded="true"]{background:var(--ink);color:var(--paper)}
+.fbar button span{color:var(--mute);margin-left:6px}
+.fbar button[aria-expanded="true"] span{color:#BDB8B0}
+.fbar .sort{margin-left:auto;border-right:0;border-left:1px solid var(--hair)}
+.panel{display:grid;grid-template-columns:5fr 4fr 3fr;gap:40px;border-bottom:1px solid var(--rule);padding:24px 0 28px}
+.hist{display:flex;align-items:flex-end;gap:3px;height:56px;border-bottom:1px solid var(--ink)}
+.hist span{flex:1;background:var(--ink)}
+.hist span.out{background:var(--hair)}
+.slider{position:relative;height:26px}
+.slider .t{position:absolute;top:0;width:1px;height:10px;background:var(--ink)}
+.slider .k{position:absolute;top:-7px;width:14px;height:14px;border:1px solid var(--ink);background:var(--paper);transform:translateX(-7px) rotate(45deg)}
+.nums{display:flex;gap:12px;align-items:center;font-family:var(--sans);font-size:14px}
+.nums input{width:110px;font:inherit;border:1px solid var(--rule);padding:7px 9px}
+.opts label{display:flex;justify-content:space-between;font-family:var(--sans);font-size:14px;padding:4px 0;border-bottom:1px solid var(--hair)}
+.chk{display:inline-block;width:12px;height:12px;border:1px solid var(--ink);margin-right:9px;vertical-align:-1px}
+.chk.on{background:var(--ink)}
+.active{display:flex;flex-wrap:wrap;gap:16px;align-items:baseline;padding:16px 0;font-family:var(--sans);font-size:14px}
+.active b{font-weight:500;border-bottom:1px solid var(--ink)}
+.active b::after{content:" ×";color:var(--mute)}
+/* Lots */
+.lots{list-style:none;margin:0;padding:0}
+.lot{display:grid;grid-template-columns:2fr 6fr 4fr;gap:24px;padding:22px 0 20px;border-bottom:1px solid var(--rule)}
+.lot .no{font-family:var(--sans);font-size:12px;letter-spacing:.08em;color:var(--mute)}
+.lot .no b{display:block;font-family:var(--serif);font-size:34px;font-weight:400;color:var(--ink);letter-spacing:-.02em;line-height:1.1}
+.lot h3{margin:2px 0 2px;font-size:27px;font-weight:500;line-height:1.15}
+.lot .ref{font-family:var(--sans);font-size:13.5px}
+.lot .meta{font-family:var(--sans);font-size:13px;color:var(--mute);margin-top:8px}
+.lot .est{text-align:right}
+.lot .est .r{font-size:27px;line-height:1.15}
+.lot .est .c{font-family:var(--sans);font-size:13px;margin-top:6px}
+.note{font-family:var(--sans);font-size:13px;color:var(--mute);margin:18px 0 0}
+/* Fiche */
+.lothead{display:grid;grid-template-columns:3fr 9fr;gap:24px;padding:56px 0 0}
+.lothead .no{font-size:96px;line-height:.9;font-weight:300;letter-spacing:-.04em}
+.lothead h1{margin:0;font-size:58px;font-weight:400;line-height:1.02;letter-spacing:-.02em}
+.lothead .ref{font-family:var(--sans);margin-top:12px;font-size:15px}
+.estimate{display:grid;grid-template-columns:3fr 5fr 4fr;gap:24px;margin-top:44px;border-top:1px solid var(--ink);padding-top:20px}
+.estimate .e{font-size:64px;line-height:1;letter-spacing:-.02em}
+.estimate .e small{font-size:.45em}
+.estimate .c{font-family:var(--sans);font-size:15px;margin-top:12px}
+.estimate .c b{font-family:var(--serif);font-size:26px;font-weight:500}
+.desc{display:grid;grid-template-columns:auto 1fr;column-gap:24px;font-size:17px}
+.desc dt{font-family:var(--sans);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);padding-top:4px}
+.desc dd{margin:0 0 8px}
+.body2{display:grid;grid-template-columns:3fr 5fr 4fr;gap:24px;margin-top:56px}
+.body2 h2{font-size:24px;font-weight:500;margin:0 0 10px}
+table{width:100%;border-collapse:collapse;font-size:17px}
+td{padding:9px 0;border-bottom:1px solid var(--hair)}
+td.n{text-align:right}
+.expert{font-size:17px}
+.expert li{margin-bottom:6px}
+.caveat{font-family:var(--sans);font-size:13.5px;border-top:1px solid var(--accent);color:var(--ink);padding-top:10px;margin-top:20px}
+footer{margin-top:72px;padding:18px 0 40px;font-family:var(--sans);font-size:12.5px;color:var(--mute);border-top:1px solid var(--rule)}
+.mbtn{display:none}
+@media (max-width:720px){
+  body{font-size:17px}
+  .wrap{padding:0 20px}
+  .mast nav{display:none}
+  .mast .name{font-size:24px}
+  .lead,.lothead,.estimate,.body2{grid-template-columns:1fr;gap:12px}
+  .lead h1{font-size:38px}
+  .fbar,.panel,.ac{display:none}
+  .lot{grid-template-columns:1fr;gap:4px}
+  .lot .no b{display:inline;font-size:20px;margin-right:8px}
+  .lot .est{text-align:left}
+  .lot h3,.lot .est .r{font-size:22px}
+  .lothead .no{font-size:48px}
+  .lothead h1{font-size:36px}
+  .estimate .e{font-size:44px}
+  .body2{margin-top:36px}
+  .body2 > section{margin-bottom:28px}
+  .mbtn{display:block;position:fixed;left:20px;right:20px;bottom:16px;background:var(--ink);color:var(--paper);text-align:center;padding:14px;font-family:var(--sans);font-weight:600;font-size:15px;text-decoration:none}
+  body.sheet .panel{display:block;position:fixed;inset:0;background:var(--paper);z-index:9;padding:24px 20px 90px;overflow:auto}
+  body.sheet .panel > div{margin-bottom:28px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <svg width="320" height="40" viewBox="0 0 320 40" role="img" aria-label="Comptoir de Cote">
+      <text x="0" y="31" font-family="Newsreader" font-size="32" font-weight="500" letter-spacing="-.3" fill="#161514">Comptoir</text>
+      <text x="137" y="31" font-family="Newsreader" font-size="32" font-style="italic" font-weight="400" fill="#625E58">de</text>
+      <text x="171" y="31" font-family="Newsreader" font-size="32" font-weight="500" letter-spacing="-.3" fill="#161514">Cote</text>
+      <path d="M137 37h63" stroke="#8A1C2C" stroke-width="1"/>
+    </svg>
+    <nav><a href="#" aria-current="page">Les cotes</a><a href="#">Marques</a><a href="#">Méthode</a></nav>
+  </header>
+  <hr class="dbl">
+  <div class="issue sc mute"><span>Cotes de montres d'occasion</span><span>Édition du 4 novembre 2026 · données de l'étude du 01/11/2026</span></div>
+  <main id="app"></main>
+  <footer>Comptoir de Cote estime des cotes indicatives : ni expertise, ni offre de rachat, ni conseil en investissement. Site indépendant, sans lien avec Chrono24 ni avec les marques citées, qui appartiennent à leurs titulaires.</footer>
+</div>
+<a class="mbtn" href="#" id="mbtn"></a>
+<script src="../data.js"></script>
+<script src="../common.js"></script>
+<script>
+(function(){
+var U = UI, D = DATA, app = document.getElementById("app");
+function lotNo(r){ return String(D.indexOf(r) + 1).padStart(3, "0"); }
+function recherche(){
+  var rows = U.filtered(), h = U.hist(20, 0, 5000), bc = U.counts("brand");
+  var bars = h.map(function(n, i){ var a = i * 250, b = a + 250; return '<span class="' + (b <= U.demo.lo || a >= U.demo.hi ? "out" : "") + '" style="height:' + (n ? 12 + n * 13 : 1) + 'px"></span>'; }).join("");
+  var ticks = ""; for (var t = 0; t <= 20; t++) ticks += '<span class="t" style="left:' + t * 5 + '%;height:' + (t % 4 === 0 ? 10 : 5) + 'px"></span>';
+  var ac = U.flag("ac") ? '<div class="ac" role="listbox"><p class="sc mute">Suggestions pour « bb58 »</p>' +
+    '<div aria-selected="true">Tudor Black Bay Fifty-Eight <em>modèle · surnom BB58</em></div><div>Tudor Black Bay 58 (2026, METAS) <em>modèle</em></div><div>M79030N-0001 <em>référence</em></div></div>' : "";
+  app.innerHTML = '<section class="lead"><div class="sc mute" style="padding-top:14px">Recherche</div><div><h1>La cote, <i>référence par référence.</i></h1>' +
+    '<div class="q"><label class="sc mute" for="q">Marque, modèle, référence ou surnom</label><input id="q" value="' + (U.flag("ac") ? "bb58" : "") + '" placeholder="79030N, Alpinist, Mark XX…">' + ac + '</div></div></section>' +
+    '<div class="fbar" role="toolbar" aria-label="Filtres"><button aria-expanded="false">Marque<span>2</span></button><button aria-expanded="true">Cote<span>1 400 – 4 000 €</span></button><button aria-expanded="false">Variation</button><button aria-expanded="false">Marché</button><button aria-expanded="false">Caractéristiques</button><button class="sort" aria-expanded="false">Trier : cote décroissante</button></div>' +
+    '<div class="panel"><div><p class="sc mute" style="margin:0 0 10px">Distribution des cotes · ' + D.length + ' références</p><div class="hist" aria-hidden="true">' + bars + '</div>' +
+      '<div class="slider" role="group" aria-label="Fourchette de cote">' + ticks + '<span class="k" style="left:' + U.demo.lo / 50 + '%"></span><span class="k" style="left:' + U.demo.hi / 50 + '%"></span></div>' +
+      '<div class="nums"><input aria-label="Cote minimale" value="1 400 €"> à <input aria-label="Cote maximale" value="4 000 €"></div></div>' +
+      '<div class="opts"><p class="sc mute" style="margin:0 0 6px">Marque</p>' + Object.keys(bc).map(function(b){ return '<label><span><span class="chk' + (U.demo.brands.indexOf(b) >= 0 ? " on" : "") + '"></span>' + b + '</span><span class="mute">' + bc[b] + '</span></label>'; }).join("") + '</div>' +
+      '<div class="opts"><p class="sc mute" style="margin:0 0 6px">Production</p><label><span><span class="chk"></span>En production</span><span class="mute">7</span></label><label><span><span class="chk"></span>Arrêtée</span><span class="mute">2</span></label></div></div>' +
+    '<div class="active"><span class="mute">' + rows.length + ' lots</span><b>Tudor</b><b>IWC</b><b>1 400 – 4 000 €</b><a href="#">Tout effacer</a></div>' +
+    '<ol class="lots">' + rows.map(function(r){
+      return '<li class="lot"><div class="no">LOT<b>' + lotNo(r) + '</b></div><div><div class="sc mute">' + U.esc(r.brand) + '</div><h3>' + U.esc(r.model) + '</h3><div class="ref">Réf. ' + U.esc(r.ref) + '</div>' +
+        '<div class="meta">' + U.esc(U.prod(r.prod)) + ' · ' + String(r.diam).replace(".", ",") + ' mm · ' + U.esc(r.mat) + ' · risque ' + r.risk + '/100 · confiance faible</div></div>' +
+        '<div class="est"><div class="sc mute">Estimation</div><div class="r">' + U.num(r.low) + ' – ' + U.eur(r.high) + '</div><div class="c">Cote ' + U.eur(r.cote) + (r.trend12 == null ? "" : ' · ' + U.arrow(r.trend12) + ' ' + U.pct(r.trend12) + ' sur 12 mois') + '</div></div></li>';
+    }).join("") + '</ol><p class="note">Maquette. Estimations tirées de l\'étude du ' + DATA_DATE + ', aucune annonce analysée.</p>';
+  document.getElementById("mbtn").textContent = "Filtres · voir " + rows.length + " lots";
+  if (U.flag("sheet")) document.body.classList.add("sheet");
+}
+function fiche(){
+  var r = D.filter(function(x){ return x.id === "tudor-79030n"; })[0];
+  var st = U.states(r).map(function(x, i){ return '<tr' + (i === 1 ? ' style="font-weight:600"' : '') + '><td>' + x[0] + '</td><td class="n">' + U.eur(x[1]) + '</td></tr>'; }).join("");
+  app.innerHTML = '<section class="lothead"><div><div class="sc mute">Lot</div><div class="no">' + lotNo(r) + '</div></div><div><div class="sc mute">' + U.esc(r.brand) + '</div><h1>' + U.esc(r.model) + '</h1><div class="ref">Référence ' + U.esc(r.ref) + ' · ' + U.esc(U.prod(r.prod)) + ', ' + U.esc(r.years) + '</div></div></section>' +
+    '<section class="estimate"><div class="sc mute" style="padding-top:12px">Estimation</div><div><div class="e">' + U.num(r.low) + ' – ' + U.num(r.high) + '<small> €</small></div><div class="c">Cote, excellent état complet : <b>' + U.eur(r.cote) + '</b></div>' +
+      '<p class="caveat">Confiance faible. Estimation tirée de l\'étude du ' + DATA_DATE + ' (prix demandés publiés), pas encore confirmée par des annonces suivies.</p></div>' +
+      '<dl class="desc"><dt>Mouvement</dt><dd>' + U.esc(r.calibre) + '</dd><dt>Boîtier</dt><dd>' + U.esc(r.mat) + ', ' + String(r.diam).replace(".", ",") + ' mm</dd><dt>Délai de revente</dt><dd>' + String(r.days).replace(".", ",") + ' jours</dd><dt>Tendance</dt><dd>' + U.pct(r.trend12) + ' sur 12 mois</dd><dt>Risque</dt><dd>' + r.risk + ' sur 100, ' + U.risk(r.risk) + '</dd></dl></section>' +
+    '<section class="body2"><div></div><section><h2>Prix selon l\'état</h2><table>' + st + '</table><p class="sans" style="font-size:14px;margin-top:16px"><a href="' + U.chrono24(r) + '">Voir les annonces sur Chrono24</a></p></section>' +
+      '<section><h2>Notes</h2><ul class="expert">' + r.auth.concat(r.pitfalls.slice(0, 1)).map(function(a){ return "<li>" + U.esc(a) + "</li>"; }).join("") + '</ul></section></section>';
+  document.getElementById("mbtn").style.display = "none";
+}
+(U.page === "fiche" ? fiche : recherche)();
+})();
+</script>
+</body>
+</html>

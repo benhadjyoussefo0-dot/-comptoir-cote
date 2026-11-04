@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Direction A — Cotation</title>
+<style>
+@font-face{font-family:"Archivo";src:url(../../fonts/archivo-wdth.woff2) format("woff2");font-weight:100 900;font-stretch:62% 125%;font-display:swap}
+@font-face{font-family:"Martian Mono";src:url(../../fonts/martian-mono-400.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Martian Mono";src:url(../../fonts/martian-mono-600.woff2) format("woff2");font-weight:600;font-display:swap}
+:root{
+  --paper:#F3F4F4; --ink:#0F1215; --mute:#545B63; --rule:#B9C0C6; --hair:#D9DDE0; --signal:#C2351C;
+  --sans:"Archivo",sans-serif; --mono:"Martian Mono",monospace;
+  --u:4px; --col:calc((100% - 11*24px)/12);
+}
+*{box-sizing:border-box}
+html{background:var(--paper);color:var(--ink)}
+body{margin:0;font-family:var(--sans);font-size:15px;line-height:1.5;font-variant-numeric:tabular-nums lining-nums}
+a{color:inherit;text-underline-offset:3px;text-decoration-thickness:1px}
+.wrap{max-width:1440px;margin:0 auto;padding:0 48px}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);column-gap:24px}
+.mono{font-family:var(--mono);font-size:.86em;letter-spacing:-.01em}
+.wide{font-stretch:125%}
+.cap{font-stretch:112%;font-weight:600;font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.mute{color:var(--mute)}
+/* Barre du haut */
+header{border-bottom:1px solid var(--ink)}
+header .wrap{display:flex;align-items:flex-end;justify-content:space-between;height:72px;padding-bottom:14px}
+nav a{margin-left:28px;text-decoration:none;font-size:14px}
+nav a[aria-current]{border-bottom:1px solid var(--ink)}
+/* Recherche */
+.search{position:relative;margin:40px 0 0}
+.search label{display:block;margin-bottom:8px}
+.search input{width:100%;font:inherit;font-stretch:118%;font-size:30px;font-weight:500;border:0;border-bottom:1px solid var(--ink);background:transparent;padding:6px 0 10px;color:var(--ink);outline:none}
+.search input:focus-visible{border-bottom:2px solid var(--signal)}
+.ac{position:absolute;left:0;right:0;top:100%;background:var(--paper);border:1px solid var(--ink);border-top:0;z-index:5;display:grid;grid-template-columns:repeat(4,1fr)}
+.ac section{padding:16px 20px;border-right:1px solid var(--hair)}
+.ac section:last-child{border-right:0}
+.ac ul{list-style:none;margin:8px 0 0;padding:0}
+.ac li{padding:5px 0;font-size:14px}
+.ac li[aria-selected]{background:var(--ink);color:var(--paper);margin:0 -8px;padding:5px 8px}
+.ac mark{background:none;font-weight:700;color:inherit}
+/* Filtres */
+.filters{grid-column:1 / span 3;padding-top:36px}
+.f{border-top:1px solid var(--rule);padding:14px 0 18px}
+.f h3{margin:0 0 10px}
+.f ul{list-style:none;padding:0;margin:0}
+.f li{display:flex;justify-content:space-between;font-size:14px;padding:3px 0}
+.box{display:inline-block;width:11px;height:11px;border:1px solid var(--ink);margin-right:8px;vertical-align:-1px}
+.box.on{background:var(--ink)}
+.hist{display:flex;align-items:flex-end;gap:2px;height:44px}
+.hist span{flex:1;background:var(--ink)}
+.hist span.out{background:var(--hair)}
+.range{position:relative;height:28px;margin-top:2px}
+.range .axis{position:absolute;left:0;right:0;top:13px;border-top:1px solid var(--rule)}
+.range .sel{position:absolute;top:8px;height:11px;border-left:1px solid var(--ink);border-right:1px solid var(--ink)}
+.range .sel::before{content:"";position:absolute;left:0;right:0;top:5px;border-top:1px solid var(--ink)}
+.range .h{position:absolute;top:4px;width:2px;height:19px;background:var(--ink);transform:translateX(-1px)}
+.pair{display:flex;gap:8px;margin-top:8px}
+.pair input{width:50%;font:inherit;font-family:var(--mono);font-size:13px;border:1px solid var(--rule);background:transparent;padding:6px 8px;color:var(--ink)}
+/* Résultats */
+.results{grid-column:4 / span 9;padding-top:36px}
+.bar{display:flex;align-items:baseline;justify-content:space-between;border-bottom:1px solid var(--ink);padding-bottom:10px}
+.bar h2{margin:0;font-stretch:118%;font-size:22px;font-weight:600}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.tag{border:1px solid var(--ink);padding:3px 8px;font-size:13px}
+.tag b{font-weight:400;margin-left:8px}
+.clear{font-size:13px;margin-left:4px}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-weight:600;font-stretch:112%;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);padding:10px 8px;border-bottom:1px solid var(--rule)}
+td{padding:12px 8px;border-bottom:1px solid var(--hair);vertical-align:baseline}
+td.n,th.n{text-align:right}
+tr:hover td{background:#E9EBEC}
+.model{font-weight:600}
+.dim{display:inline-block;position:relative;height:10px;width:120px;vertical-align:middle}
+.dim i{position:absolute;top:0;height:10px;border-left:1px solid var(--ink);border-right:1px solid var(--ink)}
+.dim i::after{content:"";position:absolute;left:0;right:0;top:4px;border-top:1px solid var(--ink)}
+.dim b{position:absolute;top:-2px;width:1px;height:14px;background:var(--signal)}
+/* Fiche */
+.title{padding:40px 0 0}
+.title .cap{margin-bottom:10px}
+.title h1{margin:0;font-stretch:125%;font-weight:600;font-size:44px;line-height:1.05;letter-spacing:-.01em}
+.title .ref{margin-top:8px;font-size:15px}
+.cote{display:grid;grid-template-columns:repeat(12,1fr);column-gap:24px;margin-top:40px;border-top:1px solid var(--ink);padding-top:28px}
+.cote .big{grid-column:1 / span 7}
+.big .v{font-stretch:125%;font-weight:500;font-size:132px;line-height:.9;letter-spacing:-.03em}
+.big .v small{font-size:.42em;letter-spacing:0;margin-left:10px}
+.dimline{position:relative;margin:44px 0 0;height:64px}
+.dimline .ext{position:absolute;top:0;height:40px;border-left:1px solid var(--ink)}
+.dimline .line{position:absolute;top:20px;height:0;border-top:1px solid var(--ink)}
+.dimline .line::before,.dimline .line::after{content:"";position:absolute;top:-4px;border:4px solid transparent}
+.dimline .line::before{left:0;border-right:7px solid var(--ink);border-left:0}
+.dimline .line::after{right:0;border-left:7px solid var(--ink);border-right:0}
+.dimline .lab{position:absolute;top:44px;font-family:var(--mono);font-size:12px;transform:translateX(-50%)}
+.dimline .pt{position:absolute;top:12px;width:1px;height:17px;background:var(--signal)}
+.dimline .mid{position:absolute;top:0;font-family:var(--mono);font-size:12px;transform:translateX(-50%);background:var(--paper);padding:0 6px}
+.cote .side{grid-column:9 / span 4;font-size:14px}
+.kv{display:grid;grid-template-columns:1fr auto;border-top:1px solid var(--rule)}
+.kv div{padding:9px 0;border-bottom:1px solid var(--hair)}
+.kv div:nth-child(even){text-align:right;font-family:var(--mono);font-size:12.5px}
+.warn{border-left:2px solid var(--signal);padding:2px 0 2px 12px;margin-top:18px;font-size:14px}
+.cols{display:grid;grid-template-columns:repeat(12,1fr);column-gap:24px;margin-top:48px}
+.cols > section{border-top:1px solid var(--ink);padding-top:14px}
+.c1{grid-column:1 / span 5}.c2{grid-column:7 / span 6}
+.out{display:inline-block;margin-top:24px;font-size:15px;font-weight:600;font-stretch:112%;text-decoration:none;border-bottom:1px solid var(--ink)}
+footer{margin-top:64px;border-top:1px solid var(--ink)}
+.cartouche{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;border-left:1px solid var(--rule)}
+.cartouche div{border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:8px 12px;font-size:12px}
+.cartouche .cap{display:block;font-size:9.5px;margin-bottom:2px;color:var(--mute)}
+.mbtn{display:none}
+/* Mobile */
+@media (max-width:720px){
+  .wrap{padding:0 20px}
+  .grid,.cote,.cols{grid-template-columns:repeat(4,1fr);column-gap:16px}
+  header .wrap{height:60px}
+  nav{display:none}
+  .search input{font-size:22px}
+  .filters{display:none}
+  .results{grid-column:1 / -1;padding-top:24px}
+  .ac{display:none}
+  table thead{display:none}
+  table,tbody,tr,td{display:block}
+  tr{border-bottom:1px solid var(--hair);padding:12px 0;display:grid;grid-template-columns:1fr auto}
+  td{border:0;padding:1px 0}
+  td.hide{display:none}
+  .mbtn{display:block;position:fixed;left:20px;right:20px;bottom:16px;background:var(--ink);color:var(--paper);text-align:center;padding:14px;font-weight:600;font-stretch:112%;text-decoration:none}
+  .title h1{font-size:30px}
+  .cote .big,.cote .side,.c1,.c2{grid-column:1 / -1}
+  .big .v{font-size:72px}
+  .cote .side{margin-top:56px}
+  .c2{margin-top:32px}
+  .cartouche{grid-template-columns:1fr 1fr}
+  body.sheet .filters{display:block;position:fixed;inset:0;background:var(--paper);z-index:9;padding:20px 20px 90px;overflow:auto}
+}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <a href="#" aria-label="Comptoir de cote, accueil"><svg width="214" height="38" viewBox="0 0 214 38" role="img" aria-hidden="true">
+    <text x="0" y="13" font-family="Archivo" font-stretch="125%" font-weight="600" font-size="11" letter-spacing="2.6" fill="#0F1215">COMPTOIR DE</text>
+    <text x="0" y="31" font-family="Archivo" font-stretch="125%" font-weight="700" font-size="20" letter-spacing="-.2" fill="#0F1215">cote</text>
+    <path d="M0 36.5h55M0 33.5v6M55 33.5v6M0 36.5l5-2.5v5zM55 36.5l-5-2.5v5z" stroke="#0F1215" stroke-width="1" fill="#0F1215"/>
+  </svg></a>
+  <nav><a href="#" aria-current="page">Recherche</a><a href="#">Marques</a><a href="#">Méthodologie</a></nav>
+</div></header>
+<main class="wrap" id="app"></main>
+<a class="mbtn" href="#" id="mbtn"></a>
+<script src="../data.js"></script>
+<script src="../common.js"></script>
+<script>
+(function(){
+var U = UI, D = DATA, app = document.getElementById("app");
+function dim(r, lo, hi, w){
+  var s = function(v){ return (v - lo) / (hi - lo) * 100; };
+  return '<span class="dim" style="width:' + w + 'px"><i style="left:' + s(r.low) + '%;right:' + (100 - s(r.high)) + '%"></i><b style="left:' + s(r.cote) + '%"></b></span>';
+}
+function filters(){
+  var bc = U.counts("brand"), pc = U.counts("prod"), h = U.hist(16, 0, 5000);
+  var brands = Object.keys(bc).map(function(b){ return '<li><span><span class="box' + (U.demo.brands.indexOf(b) >= 0 ? " on" : "") + '"></span>' + b + '</span><span class="mono mute">' + bc[b] + '</span></li>'; }).join("");
+  var bars = h.map(function(n, i){ var a = i * 5000 / 16, b = a + 5000 / 16; return '<span class="' + (b <= U.demo.lo || a >= U.demo.hi ? "out" : "") + '" style="height:' + (n ? 10 + n * 14 : 2) + 'px"></span>'; }).join("");
+  var L = U.demo.lo / 5000 * 100, R = U.demo.hi / 5000 * 100;
+  return '<aside class="filters" aria-label="Filtres">' +
+    '<div class="f"><h3 class="cap">Marque</h3><ul>' + brands + '</ul></div>' +
+    '<div class="f"><h3 class="cap">Cote</h3><div class="hist" aria-hidden="true">' + bars + '</div>' +
+      '<div class="range" role="group" aria-label="Fourchette de cote"><span class="axis"></span><span class="sel" style="left:' + L + '%;right:' + (100 - R) + '%"></span><span class="h" style="left:' + L + '%"></span><span class="h" style="left:' + R + '%"></span></div>' +
+      '<div class="pair"><input aria-label="Cote minimale" value="1 400"><input aria-label="Cote maximale" value="4 000"></div></div>' +
+    '<div class="f"><h3 class="cap">Variation sur 12 mois</h3><ul><li><span><span class="box"></span>En hausse</span><span class="mono mute">4</span></li><li><span><span class="box"></span>Stable</span><span class="mono mute">1</span></li><li><span><span class="box"></span>En baisse</span><span class="mono mute">3</span></li></ul></div>' +
+    '<div class="f"><h3 class="cap">Production</h3><ul><li><span><span class="box"></span>En production</span><span class="mono mute">' + (pc.production || 0) + '</span></li><li><span><span class="box"></span>Arrêtée</span><span class="mono mute">' + (pc.arretee || 0) + '</span></li></ul></div>' +
+    '<div class="f"><h3 class="cap">Indice de risque</h3><ul><li><span><span class="box"></span>Faible (0–33)</span><span class="mono mute">2</span></li><li><span><span class="box"></span>Modéré (34–55)</span><span class="mono mute">5</span></li><li><span><span class="box"></span>Élevé (56–100)</span><span class="mono mute">3</span></li></ul></div>' +
+    '<div class="f"><h3 class="cap">Niveau de confiance</h3><ul><li><span><span class="box"></span>Élevé</span><span class="mono mute">0</span></li><li><span><span class="box"></span>Moyen</span><span class="mono mute">0</span></li><li><span><span class="box"></span>Faible</span><span class="mono mute">10</span></li></ul></div>' +
+  '</aside>';
+}
+function recherche(){
+  var rows = U.filtered();
+  var ac = U.flag("ac") ? '<div class="ac" role="listbox" aria-label="Suggestions">' +
+    '<section><span class="cap mute">Modèles</span><ul><li aria-selected="true">Black Bay Fifty-<mark>Eight</mark></li><li>Black Bay 58 (2026, METAS)</li></ul></section>' +
+    '<section><span class="cap mute">Références</span><ul><li class="mono">M79030N-0001</li><li class="mono">M7939A1A0NU-0001</li></ul></section>' +
+    '<section><span class="cap mute">Surnoms</span><ul><li>« <mark>BB58</mark> » → Black Bay Fifty-Eight</li></ul></section>' +
+    '<section><span class="cap mute">Marques</span><ul><li>Tudor</li></ul></section></div>' : "";
+  var body = rows.map(function(r){
+    return '<tr><td><span class="mono">' + U.esc(r.ref) + '</span><br><span class="model">' + U.esc(r.brand + " " + r.model) + '</span></td>' +
+      '<td class="n mono">' + U.eur(r.cote) + '</td>' +
+      '<td class="hide">' + dim(r, r.cote * 0.75, r.cote * 1.25, 140) + '</td>' +
+      '<td class="n mono hide">' + (r.trend12 == null ? "—" : U.arrow(r.trend12) + " " + U.pct(r.trend12)) + '</td>' +
+      '<td class="n mono hide">' + r.risk + '</td>' +
+      '<td class="hide">Faible</td>' +
+      '<td class="hide mono mute">' + DATA_DATE + '</td></tr>';
+  }).join("");
+  app.innerHTML = '<div class="search"><label for="q" class="cap mute">Marque, modèle, référence ou surnom</label><input id="q" value="' + (U.flag("ac") ? "bb58" : "") + '" placeholder="Ex. 79030N, Alpinist, Mark XX" autocomplete="off">' + ac + '</div>' +
+    '<div class="grid">' + filters() +
+    '<section class="results" aria-labelledby="rc"><div class="bar"><h2 id="rc" aria-live="polite">' + rows.length + ' références</h2><span class="mute" style="font-size:14px">Trier : <a href="#">cote décroissante</a></span></div>' +
+    '<div class="tags"><span class="tag">Marque : Tudor, IWC<b aria-label="Retirer">×</b></span><span class="tag">Cote : 1 400 – 4 000 €<b aria-label="Retirer">×</b></span><a href="#" class="clear">Tout effacer</a></div>' +
+    '<table><thead><tr><th>Référence</th><th class="n">Cote</th><th>Fourchette</th><th class="n">12 mois</th><th class="n">Risque</th><th>Confiance</th><th>Données</th></tr></thead><tbody>' + body + '</tbody></table>' +
+    '<p class="mute" style="font-size:13px;margin-top:16px">Maquette. Cotes de l\'étude du ' + DATA_DATE + ', aucune annonce analysée : confiance faible partout.</p></section></div>';
+  document.getElementById("mbtn").textContent = "Filtres · Afficher " + rows.length + " résultats";
+  if (U.flag("sheet")) document.body.classList.add("sheet");
+}
+function fiche(){
+  var r = D.filter(function(x){ return x.id === "tudor-79030n"; })[0];
+  var lo = r.low - 150, hi = r.high + 150, s = function(v){ return (v - lo) / (hi - lo) * 100; };
+  var st = U.states(r).map(function(x, i){ return '<div' + (i === 1 ? ' style="font-weight:600"' : '') + '>' + x[0] + '</div><div>' + U.eur(x[1]) + '</div>'; }).join("");
+  app.innerHTML = '<div class="title"><div class="cap mute">' + U.esc(r.brand) + ' · ' + U.esc(U.prod(r.prod)) + ' · ' + U.esc(r.years) + '</div><h1>' + U.esc(r.model) + '</h1><div class="ref mono">Réf. ' + U.esc(r.ref) + '</div></div>' +
+    '<div class="cote"><div class="big"><div class="cap mute">Cote · excellent état, boîte et papiers</div><div class="v">' + U.num(r.cote) + '<small>€</small></div>' +
+      '<div class="dimline" aria-label="Fourchette de ' + U.eur(r.low) + ' à ' + U.eur(r.high) + '">' +
+        '<span class="ext" style="left:' + s(r.low) + '%"></span><span class="ext" style="left:' + s(r.high) + '%"></span>' +
+        '<span class="line" style="left:' + s(r.low) + '%;right:' + (100 - s(r.high)) + '%"></span>' +
+        '<span class="mid" style="left:' + (s(r.low) + s(r.high)) / 2 + '%">fourchette</span><span class="pt" style="left:' + s(r.cote) + '%"></span>' +
+        '<span class="lab" style="left:' + s(r.low) + '%">' + U.eur(r.low) + '</span><span class="lab" style="left:' + s(r.high) + '%">' + U.eur(r.high) + '</span></div></div>' +
+      '<div class="side"><div class="kv"><div>Type de prix</div><div>prix demandés</div><div>Échantillon</div><div>0 annonce</div><div>Mise à jour</div><div>' + DATA_DATE + '</div><div>Délai de revente</div><div>' + String(r.days).replace(".", ",") + ' j</div><div>Tendance 12 mois</div><div>' + U.pct(r.trend12) + '</div><div>Indice de risque</div><div>' + r.risk + ' / 100</div></div>' +
+      '<p class="warn">Confiance faible : cote de l\'étude, pas encore confirmée par des annonces.</p></div></div>' +
+    '<div class="cols"><section class="c1"><h2 class="cap">Prix selon l\'état</h2><div class="kv">' + st + '</div><a class="out" href="' + U.chrono24(r) + '">Voir les annonces sur Chrono24 ↗</a></section>' +
+      '<section class="c2"><h2 class="cap">Fiche</h2><div class="kv"><div>Calibre</div><div>' + U.esc(r.calibre) + '</div><div>Diamètre</div><div>' + String(r.diam).replace(".", ",") + ' mm</div><div>Matière</div><div>' + U.esc(r.mat) + '</div><div>Production</div><div>' + U.esc(r.years) + '</div></div>' +
+      '<h2 class="cap" style="margin-top:28px">Points de contrôle</h2><ul style="padding-left:18px;font-size:14px">' + r.auth.map(function(a){ return "<li>" + U.esc(a) + "</li>"; }).join("") + '</ul></section></div>';
+  document.getElementById("mbtn").style.display = "none";
+}
+(U.page === "fiche" ? fiche : recherche)();
+document.body.insertAdjacentHTML("beforeend", '<footer><div class="wrap"><div class="cartouche"><div><span class="cap">Comptoir de cote</span>Estimation indicative, ni expertise ni offre de rachat. Site indépendant de Chrono24 et des marques citées.</div><div><span class="cap">Méthode</span>v0.3</div><div><span class="cap">Données</span>' + DATA_DATE + '</div><div><span class="cap">Unité</span>euro (BCE)</div></div></div></footer>');
+})();
+</script>
+</body>
+</html>
