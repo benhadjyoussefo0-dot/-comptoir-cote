@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-10T19:46:14.657Z",
+ "updatedAt": "2026-11-11T06:29:15.270Z",
  "fx": {
   "rates": {
    "USD": 1.1214,
@@ -26,7 +26,7 @@
  },
  "refs": {
   "tudor-79030n": {
-   "updatedAt": "2026-11-10T19:46:14.657Z",
+   "updatedAt": "2026-11-11T06:29:15.270Z",
    "market": 2512,
    "low": 2330,
    "high": 2800,
@@ -52,7 +52,7 @@
    "trackingSince": null
   },
   "tudor-bb58-2026": {
-   "updatedAt": "2026-11-10T19:46:14.657Z",
+   "updatedAt": "2026-11-11T06:29:15.270Z",
    "market": 3681,
    "low": 3550,
    "high": 4000,
@@ -78,7 +78,7 @@
    "trackingSince": null
   },
   "tudor-79000n": {
-   "updatedAt": "2026-11-10T19:46:14.657Z",
+   "updatedAt": "2026-11-11T06:29:15.270Z",
    "market": 2850,
    "low": 2650,
    "high": 3150,
@@ -104,7 +104,7 @@
    "trackingSince": null
   },
   "tudor-25407n": {
-   "updatedAt": "2026-11-10T19:46:14.657Z",
+   "updatedAt": "2026-11-11T06:29:15.270Z",
    "market": 3391,
    "low": 3020,
    "high": 3700,
@@ -130,7 +130,7 @@
    "trackingSince": null
   },
   "tudor-79830rb": {
-   "updatedAt": "2026-11-10T19:46:14.657Z",
+   "updatedAt": "2026-11-11T06:29:15.270Z",
    "market": 2677,
    "low": 2450,
    "high": 3000,
@@ -156,7 +156,7 @@
    "trackingSince": null
   },
   "iwc-iw328201": {
-   "updatedAt": "2026-11-10T19:46:14.657Z",
+   "updatedAt": "2026-11-11T06:29:15.270Z",
    "market": 3595,
    "low": 3200,
    "high": 3900,
@@ -182,7 +182,7 @@
    "trackingSince": null
   },
   "iwc-pilot-chrono-41": {
-   "updatedAt": "2026-11-10T19:46:14.657Z",
+   "updatedAt": "2026-11-11T06:29:15.270Z",
    "market": 4750,
    "low": 4320,
    "high": 5400,
@@ -208,7 +208,7 @@
    "trackingSince": null
   },
   "seiko-spb143": {
-   "updatedAt": "2026-11-10T19:46:14.657Z",
+   "updatedAt": "2026-11-11T06:29:15.270Z",
    "market": 677,
    "low": 600,
    "high": 770,
@@ -234,7 +234,7 @@
    "trackingSince": null
   },
   "seiko-sla021": {
-   "updatedAt": "2026-11-10T19:46:14.657Z",
+   "updatedAt": "2026-11-11T06:29:15.270Z",
    "market": 1580,
    "low": 1320,
    "high": 1950,
@@ -260,7 +260,7 @@
    "trackingSince": null
   },
   "seiko-sje083": {
-   "updatedAt": "2026-11-10T19:46:14.657Z",
+   "updatedAt": "2026-11-11T06:29:15.270Z",
    "market": 1503,
    "low": 1280,
    "high": 1880,
